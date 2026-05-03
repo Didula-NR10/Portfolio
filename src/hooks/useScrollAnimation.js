@@ -5,21 +5,17 @@ import { useEffect, useRef } from 'react';
  * Attaches an IntersectionObserver to a container ref.
  * Any child with class "reveal", "reveal-left", or "reveal-right"
  * gets the "visible" class added when it enters the viewport.
- *
- * @param {Object} options - IntersectionObserver options
- * @returns {React.RefObject} - Attach to the container element
  */
 export function useScrollAnimation(options = {}) {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    const defaults = { threshold: 0.12, rootMargin: '0px 0px -40px 0px' };
+    const defaults = { threshold: 0.1, rootMargin: '0px 0px -40px 0px' };
     const config = { ...defaults, ...options };
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
-          // Stagger sibling reveals slightly
           const delay = i * 60;
           setTimeout(() => {
             entry.target.classList.add('visible');
@@ -33,7 +29,7 @@ export function useScrollAnimation(options = {}) {
     if (!container) return;
 
     const targets = container.querySelectorAll('.reveal, .reveal-left, .reveal-right');
-    targets.forEach((el) => observer.observe(el));
+    targets.forEach(el => observer.observe(el));
 
     return () => observer.disconnect();
   }, []);
@@ -41,10 +37,6 @@ export function useScrollAnimation(options = {}) {
   return containerRef;
 }
 
-/**
- * useScrollAnimationGlobal
- * Observes the entire document (use in App.js for page-wide reveals).
- */
 export function useScrollAnimationGlobal() {
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -62,7 +54,7 @@ export function useScrollAnimationGlobal() {
     );
 
     const targets = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
-    targets.forEach((el) => observer.observe(el));
+    targets.forEach(el => observer.observe(el));
 
     return () => observer.disconnect();
   }, []);
