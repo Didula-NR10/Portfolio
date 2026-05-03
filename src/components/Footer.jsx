@@ -2,13 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { siteData } from '../data';
 
-// ─── Animated Electric Gen O Logo ──────────────────────────────
+// ─── Animated Electric Gen O Logo (Outer circle removed) ──────────
 const GenoLogoSmall = ({ animStage, theme }) => {
   return (
     <div 
       // Add theme-specific class and only apply stage animation if dark mode
       className={`electric-logo-container ${theme === 'dark' ? `stage-${animStage}` : 'light-mode-logo'}`}
-      style={{ display: 'flex', alignItems: 'center', gap: '1px' }} 
+      style={{ display: 'flex', alignItems: 'center', gap: '2px' }} 
     >
       <span className="electric-text" style={{
         fontFamily: "var(--font-display, 'Syne', sans-serif)",
@@ -20,11 +20,11 @@ const GenoLogoSmall = ({ animStage, theme }) => {
       }}>GEN</span>
       <svg 
         className="electric-svg-icon"
-        width="22" height="22" viewBox="0 0 24 24" fill="none" 
+        width="26" height="26" viewBox="0 0 24 24" fill="none" 
         xmlns="http://www.w3.org/2000/svg" 
         style={{ marginTop: '-4px', overflow: 'visible' }}
       >
-        <circle className="electric-svg-path" cx="12" cy="12" r="10" stroke="var(--accent)" strokeWidth="2.5" fill="none" />
+        {/* Outer circle removed. Only the power icon lines remain */}
         <path className="electric-svg-path" d="M12 4 L12 10" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" />
         <path className="electric-svg-path" d="M7 7.5 A7.5 7.5 0 1 0 17 7.5" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" fill="none" />
       </svg>
