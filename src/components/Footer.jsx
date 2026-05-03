@@ -2,12 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { siteData } from '../data';
 
-// ─── Animated Electric Gen O Logo (Accepts animStage prop) ─────
-const GenoLogoSmall = ({ animStage }) => {
+// ─── Animated Electric Gen O Logo ──────────────────────────────
+const GenoLogoSmall = ({ animStage, theme }) => {
   return (
     <div 
-      className={`electric-logo-container stage-${animStage}`}
-      style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+      // Add theme-specific class and only apply stage animation if dark mode
+      className={`electric-logo-container ${theme === 'dark' ? `stage-${animStage}` : 'light-mode-logo'}`}
+      style={{ display: 'flex', alignItems: 'center', gap: '1px' }} 
     >
       <span className="electric-text" style={{
         fontFamily: "var(--font-display, 'Syne', sans-serif)",
@@ -17,7 +18,12 @@ const GenoLogoSmall = ({ animStage }) => {
         color: 'var(--text)',
         lineHeight: '1',
       }}>GEN</span>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginTop: '-4px' }}>
+      <svg 
+        className="electric-svg-icon"
+        width="22" height="22" viewBox="0 0 24 24" fill="none" 
+        xmlns="http://www.w3.org/2000/svg" 
+        style={{ marginTop: '-4px', overflow: 'visible' }}
+      >
         <circle className="electric-svg-path" cx="12" cy="12" r="10" stroke="var(--accent)" strokeWidth="2.5" fill="none" />
         <path className="electric-svg-path" d="M12 4 L12 10" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" />
         <path className="electric-svg-path" d="M7 7.5 A7.5 7.5 0 1 0 17 7.5" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" fill="none" />
@@ -26,11 +32,11 @@ const GenoLogoSmall = ({ animStage }) => {
   );
 };
 
-export default function Footer() {
+// Accept 'theme' as a prop
+export default function Footer({ theme }) {
   const { company, footer } = siteData;
   const [localTime, setLocalTime] = useState('');
   
-  // 0: Hidden (Waiting), 1: Massive Strike, 2: Settled (Flickering)
   const [animStage, setAnimStage] = useState(0); 
   const footerRef = useRef(null);
 
@@ -53,26 +59,29 @@ export default function Footer() {
 
   // Intersection Observer for the Epic Lightning Strike
   useEffect(() => {
+    // Only run lightning observer if in dark mode
+    if (theme !== 'dark') {
+       setAnimStage(0);
+       return;
+    }
+
     let strikeTimer;
     let settleTimer;
 
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        setAnimStage(0); // 1. Start completely hidden
+        setAnimStage(0); 
         
-        // Wait 2.5 seconds, then trigger the massive strike!
         strikeTimer = setTimeout(() => {
-          setAnimStage(1); // 2. BOOM! Lightning Strike!
+          setAnimStage(1); 
           
-          // Wait 1 second for the strike animation to finish, then settle
           settleTimer = setTimeout(() => {
-            setAnimStage(2); // 3. Ongoing current flickering
+            setAnimStage(2); 
           }, 1000);
 
         }, 2500); 
 
       } else {
-        // Reset everything if user scrolls away
         clearTimeout(strikeTimer);
         clearTimeout(settleTimer);
         setAnimStage(0);
@@ -86,7 +95,7 @@ export default function Footer() {
       clearTimeout(strikeTimer);
       clearTimeout(settleTimer);
     };
-  }, []);
+  }, [theme]); // Re-run effect when theme changes
 
   const currentYear = new Date().getFullYear();
 
@@ -94,7 +103,8 @@ export default function Footer() {
     <>
       <footer 
         ref={footerRef} 
-        className={`modern-footer ${animStage === 1 ? 'footer-lightning-strike' : ''}`}
+        // Dynamic class based on theme
+        className={`modern-footer ${theme === 'dark' ? 'footer-dark' : 'footer-light'} ${animStage === 1 && theme === 'dark' ? 'footer-lightning-strike' : ''}`}
       >
         <div className="footer-grid-bg"></div>
         <div className="footer-glow-line"></div>
@@ -119,8 +129,7 @@ export default function Footer() {
             {/* Brand Section */}
             <div style={{ maxWidth: 320, position: 'relative' }}>
               <Link to="/" style={{ textDecoration: 'none' }}>
-                {/* Passing the stage to the Logo */}
-                <GenoLogoSmall animStage={animStage} />
+                <GenoLogoSmall animStage={animStage} theme={theme} />
               </Link>
               
               <div className="availability-badge">
@@ -206,13 +215,46 @@ export default function Footer() {
 
       {/* Modern CSS Animations & Effects */}
       <style>{`
+        /* --- DYNAMIC THEME CSS --- */
         .modern-footer {
-          background: linear-gradient(180deg, var(--bg, #07090D) 0%, var(--bg2, #0A0C10) 100%);
           position: relative;
           overflow: hidden;
+          transition: background 0.4s ease;
+        }
+        
+        .footer-dark {
+          background: linear-gradient(180deg, var(--bg, #07090D) 0%, var(--bg2, #0A0C10) 100%);
+        }
+        .footer-light {
+           background: var(--bg2); /* Clean solid background for light mode */
         }
 
-        /* --- THE MASSIVE FOOTER LIGHTNING STRIKE --- */
+        /* Top Line / Glow */
+        .footer-glow-line {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 80%;
+          height: 1px;
+          z-index: 2;
+          transition: all 0.4s ease;
+        }
+        
+        .footer-dark .footer-glow-line {
+          background: linear-gradient(90deg, transparent, var(--accent, #00e5ff), transparent);
+          opacity: 0.4;
+          box-shadow: 0 0 20px 2px var(--accent, #00e5ff);
+        }
+        
+        .footer-light .footer-glow-line {
+          background: var(--border);
+          opacity: 1;
+          box-shadow: none;
+          width: 100%;
+        }
+
+        /* --- THE MASSIVE FOOTER LIGHTNING STRIKE (DARK ONLY) --- */
         .footer-lightning-strike::after {
           content: '';
           position: absolute;
@@ -256,14 +298,12 @@ export default function Footer() {
           100% { opacity: 0; }
         }
 
-        /* --- LOGO STAGES --- */
-        /* Stage 0: Completely Hidden */
+        /* --- LOGO STAGES (DARK ONLY) --- */
         .electric-logo-container.stage-0 {
           opacity: 0;
           visibility: hidden;
         }
 
-        /* Stage 1: The Strike on the Logo */
         .electric-logo-container.stage-1 {
           opacity: 1;
           visibility: visible;
@@ -292,7 +332,6 @@ export default function Footer() {
           100% { stroke-dashoffset: 0; stroke: var(--accent); }
         }
 
-        /* Stage 2: Settled and Flickering */
         .electric-logo-container.stage-2 {
           opacity: 1;
           visibility: visible;
@@ -300,7 +339,7 @@ export default function Footer() {
         .electric-logo-container.stage-2 .electric-text {
           animation: text-flicker 3s infinite;
         }
-        .electric-logo-container.stage-2 .electric-svg-path {
+        .electric-logo-container.stage-2 .electric-svg-icon {
           animation: svg-flicker 3s infinite;
         }
 
@@ -323,6 +362,22 @@ export default function Footer() {
           9% { opacity: 0.8; }
           10% { opacity: 1; }
         }
+
+        /* --- LOGO (LIGHT MODE) --- */
+        .electric-logo-container.light-mode-logo {
+           opacity: 1;
+           visibility: visible;
+        }
+        .light-mode-logo .electric-text {
+           color: var(--text);
+           transition: color 0.3s ease;
+        }
+        /* Clean transitions, no glowing */
+        .light-mode-logo .electric-svg-icon {
+           transition: all 0.3s ease;
+        }
+
+
         /* -------------------------------------- */
 
         .footer-grid-bg {
@@ -330,8 +385,8 @@ export default function Footer() {
           inset: 0;
           background-size: 40px 40px;
           background-image: 
-            linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            linear-gradient(to right, rgba(128, 128, 128, 0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(128, 128, 128, 0.05) 1px, transparent 1px);
           mask-image: linear-gradient(to bottom, transparent, black 10%, transparent 90%);
           -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, transparent 90%);
           z-index: 1;
@@ -379,29 +434,19 @@ export default function Footer() {
           100% { transform: scale(3); opacity: 0; }
         }
 
+        /* Time Widget Dynamic Theming */
         .footer-time-widget {
           font-family: var(--font-mono, monospace);
           font-size: 13px;
-          background: rgba(255,255,255,0.03);
           padding: 8px 12px;
           border-radius: 6px;
           border-left: 2px solid var(--accent, #00e5ff);
           display: inline-block;
           margin-top: 4px;
+          transition: background 0.3s ease;
         }
-
-        .footer-glow-line {
-          position: absolute;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 80%;
-          height: 1px;
-          background: linear-gradient(90deg, transparent, var(--accent, #00e5ff), transparent);
-          opacity: 0.4;
-          box-shadow: 0 0 20px 2px var(--accent, #00e5ff);
-          z-index: 2;
-        }
+        .footer-dark .footer-time-widget { background: rgba(255,255,255,0.03); }
+        .footer-light .footer-time-widget { background: rgba(0,0,0,0.03); }
 
         .footer-heading {
           font-family: var(--font-display, 'Syne', sans-serif);
@@ -410,7 +455,7 @@ export default function Footer() {
           letter-spacing: 2.5px;
           text-transform: uppercase;
           margin-bottom: 24px;
-          background: linear-gradient(90deg, var(--text, #fff) 0%, var(--accent, #00e5ff) 100%);
+          background: linear-gradient(90deg, var(--text) 0%, var(--accent) 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
@@ -436,16 +481,16 @@ export default function Footer() {
           color: var(--text2, #9ca3af);
         }
 
+        /* Social Buttons Dynamic Theming */
         .social-glass-btn {
           width: 44px;
           height: 44px;
           border-radius: 50%;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(128, 128, 128, 0.2);
           display: flex;
           align-items: center;
           justify-content: center;
-          color: var(--text, #fff);
+          color: var(--text);
           text-decoration: none;
           font-size: 12px;
           font-family: var(--font-mono, monospace);
@@ -454,17 +499,21 @@ export default function Footer() {
           transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
           backdrop-filter: blur(10px);
         }
+        
+        .footer-dark .social-glass-btn { background: rgba(255, 255, 255, 0.03); }
+        .footer-light .social-glass-btn { background: var(--surface); }
 
         .social-glass-btn:hover {
           background: var(--accent, #00e5ff);
           color: #000;
           border-color: var(--accent, #00e5ff);
           transform: translateY(-5px);
-          box-shadow: 0 10px 20px -5px rgba(0, 229, 255, 0.4);
         }
+        .footer-dark .social-glass-btn:hover { box-shadow: 0 10px 20px -5px rgba(0, 229, 255, 0.4); }
+        .footer-light .social-glass-btn:hover { box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.1); }
 
         .footer-bottom-bar {
-          border-top: 1px solid rgba(255, 255, 255, 0.05);
+          border-top: 1px solid var(--border);
           padding-top: 32px;
           display: flex;
           align-items: center;

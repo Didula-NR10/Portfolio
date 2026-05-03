@@ -106,7 +106,7 @@ function AppInner() {
       <main>
         <PageWrapper>
           <Routes>
-            <Route path="/"         element={<Home />} />
+            <Route path="/"        element={<Home />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/services" element={<Services />} />
             <Route path="/about"    element={<About />} />
@@ -114,7 +114,8 @@ function AppInner() {
           </Routes>
         </PageWrapper>
       </main>
-      <Footer />
+      {/* Theme prop passed to Footer here */}
+      <Footer theme={theme} />
       <ScrollReset />
     </>
   );

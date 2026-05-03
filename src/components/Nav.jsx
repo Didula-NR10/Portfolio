@@ -2,34 +2,28 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { siteData } from '../data';
 
-/// ─── Gen O Logo (Refactored using Flexbox for perfect alignment) ──
+// ─── Electric Gen O Logo (Navbar Version) ────────────────────────
 const GenoLogo = () => (
-  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-    {/* Text part outside of SVG for consistent rendering across browsers */}
-    <span style={{
+  <div className="nav-electric-logo" style={{ display: 'flex', alignItems: 'center', gap: '1px' }}>
+    <span className="nav-electric-text" style={{
       fontFamily: "var(--font-display, 'Syne', sans-serif)",
       fontSize: '28px',
       fontWeight: '800',
       letterSpacing: '3px',
       color: 'var(--text)',
-      transition: 'color 0.3s ease',
       lineHeight: '1'
     }}>
       GEN
     </span>
-    {/* Icon part as a separate standalone SVG */}
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginTop: '-4px' }}>
-      {/* Outer Circle */}
+    <svg className="nav-electric-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginTop: '-4px', overflow: 'visible' }}>
       <circle cx="12" cy="12" r="10" stroke="var(--accent)" strokeWidth="2.5" fill="none" />
-      {/* Power line */}
       <path d="M12 4 L12 10" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" />
-      {/* Power arc */}
       <path d="M7 7.5 A7.5 7.5 0 1 0 17 7.5" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" fill="none" />
     </svg>
   </div>
 );
 
-// ─── Theme toggle icons ────────────────────────────────────────────
+// ─── Icons ────────────────────────────────────────────
 const SunIcon = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="5" />
@@ -46,7 +40,6 @@ const MoonIcon = () => (
   </svg>
 );
 
-// ─── Hamburger / X ────────────────────────────────────────────────
 const MenuIcon = ({ open }) =>
   open ? (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -62,13 +55,33 @@ const MenuIcon = ({ open }) =>
 
 export default function Nav({ theme, onToggleTheme }) {
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [visible, setVisible] = useState(true); 
   const location = useLocation();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      setScrolled(currentScrollY > 20);
+      
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+      }
+      lastScrollY = currentScrollY;
+
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolledPercentage = (currentScrollY / height) * 100;
+      setScrollProgress(scrolledPercentage);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => { setMenuOpen(false); }, [location]);
@@ -77,17 +90,31 @@ export default function Nav({ theme, onToggleTheme }) {
 
   return (
     <>
-      <nav style={{
+      <nav className={theme === 'dark' ? 'nav-dark' : 'nav-light'} style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
         background: scrolled ? 'var(--nav-bg, rgba(15, 15, 15, 0.75))' : 'transparent',
         backdropFilter: scrolled ? 'blur(16px) saturate(180%)' : 'none',
         WebkitBackdropFilter: scrolled ? 'blur(16px) saturate(180%)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid transparent',
+        borderBottom: scrolled ? '1px solid var(--border)' : '1px solid transparent',
         padding: '0 5%',
         height: 80, 
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        transform: visible ? 'translateY(0)' : 'translateY(-100%)',
+        transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s, backdrop-filter 0.4s, border-color 0.4s',
       }}>
+
+        {/* --- Neon Scroll Progress Bar --- */}
+        <div style={{
+          position: 'absolute',
+          bottom: 0, 
+          left: 0,
+          height: '2px',
+          background: 'var(--accent, #00e5ff)',
+          width: `${scrollProgress}%`,
+          boxShadow: theme === 'dark' ? '0 0 10px var(--accent, #00e5ff), 0 0 5px #fff' : 'none',
+          zIndex: 101,
+          transition: 'width 0.1s ease-out'
+        }} />
 
         <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
           <GenoLogo />
@@ -108,7 +135,7 @@ export default function Nav({ theme, onToggleTheme }) {
           ))}
         </ul>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           
           <button 
             className="theme-toggle-btn"
@@ -134,24 +161,71 @@ export default function Nav({ theme, onToggleTheme }) {
         </div>
       </nav>
 
+      {/* --- MOBILE MENU OVERLAY --- */}
       {menuOpen && (
-        <div className="mobile-menu-overlay">
+        <div className={`mobile-menu-overlay ${theme === 'dark' ? 'menu-dark' : 'menu-light'}`}>
           {siteData.nav.map((item) => (
             <Link 
               key={item.path} 
               to={item.path} 
               className={`mobile-nav-link ${isActive(item.path) ? 'active' : ''}`}
+              onClick={() => setMenuOpen(false)} 
             >
               {item.label}
             </Link>
           ))}
-          <Link to="/contact" className="modern-cta-btn" style={{ marginTop: 20, fontSize: 16 }}>
+          <Link 
+            to="/contact" 
+            className="modern-cta-btn" 
+            style={{ marginTop: 20, fontSize: 16 }}
+            onClick={() => setMenuOpen(false)} 
+          >
             Let's Talk
           </Link>
         </div>
       )}
 
       <style>{`
+        /* --- DYNAMIC THEME CSS LOGIC --- */
+        
+        .nav-dark .nav-electric-text { animation: nav-text-flicker 3s infinite; }
+        .nav-dark .nav-electric-svg { animation: nav-svg-flicker 3s infinite; }
+        
+        .nav-dark .nav-electric-logo:hover .nav-electric-text { animation: nav-text-flicker-fast 0.5s infinite; }
+        .nav-dark .nav-electric-logo:hover .nav-electric-svg { animation: nav-svg-flicker-fast 0.5s infinite; }
+        
+        .nav-light .nav-electric-text, .nav-light .nav-electric-svg { transition: all 0.3s ease; }
+
+        @keyframes nav-text-flicker {
+          0%, 100% { filter: drop-shadow(0 0 8px var(--accent)); color: var(--text); }
+          5% { filter: drop-shadow(0 0 2px var(--accent)); color: rgba(255,255,255,0.7); }
+          6% { filter: drop-shadow(0 0 10px var(--accent)); color: var(--text); }
+          7% { filter: drop-shadow(0 0 2px var(--accent)); }
+          8% { filter: drop-shadow(0 0 12px var(--accent)); }
+          9% { filter: drop-shadow(0 0 1px var(--accent)); opacity: 0.8; }
+          10% { filter: drop-shadow(0 0 8px var(--accent)); opacity: 1; }
+        }
+
+        @keyframes nav-svg-flicker {
+          0%, 100% { filter: drop-shadow(0 0 5px var(--accent)); opacity: 1; }
+          5% { filter: drop-shadow(0 0 1px var(--accent)); opacity: 0.6; }
+          6% { filter: drop-shadow(0 0 8px var(--accent)); opacity: 1; }
+          7% { opacity: 0.5; }
+          8% { filter: drop-shadow(0 0 10px var(--accent)); opacity: 1; }
+          9% { opacity: 0.8; }
+          10% { opacity: 1; }
+        }
+
+        @keyframes nav-text-flicker-fast {
+          0%, 100% { filter: drop-shadow(0 0 15px var(--accent)); color: #fff; }
+          50% { filter: drop-shadow(0 0 2px var(--accent)); color: rgba(255,255,255,0.8); }
+        }
+        @keyframes nav-svg-flicker-fast {
+          0%, 100% { filter: drop-shadow(0 0 15px var(--accent)); opacity: 1; }
+          50% { filter: drop-shadow(0 0 2px var(--accent)); opacity: 0.5; }
+        }
+
+        /* Nav Links */
         .modern-nav-link {
           font-family: var(--font-display, 'Syne', sans-serif);
           font-size: 13px;
@@ -167,6 +241,13 @@ export default function Nav({ theme, onToggleTheme }) {
 
         .modern-nav-link:hover, .modern-nav-link.active {
           color: var(--accent, #00e5ff);
+        }
+        
+        .nav-dark .modern-nav-link:hover, .nav-dark .modern-nav-link.active {
+          text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+        }
+        .nav-light .modern-nav-link:hover, .nav-light .modern-nav-link.active {
+          text-shadow: none;
         }
 
         .modern-nav-link::after {
@@ -186,10 +267,14 @@ export default function Nav({ theme, onToggleTheme }) {
           transform: scaleX(1);
           transform-origin: left;
         }
+        
+        .nav-dark .modern-nav-link::after { box-shadow: 0 0 8px var(--accent, #00e5ff); }
+        .nav-light .modern-nav-link::after { box-shadow: none; }
 
+        /* Theme Toggle Button */
         .theme-toggle-btn {
           width: 56px;
-          height: 30px;
+          height: 32px;
           background: var(--surface2, rgba(255,255,255,0.05));
           border: 1px solid var(--border, rgba(255,255,255,0.1));
           border-radius: 30px;
@@ -203,12 +288,14 @@ export default function Nav({ theme, onToggleTheme }) {
         
         .theme-toggle-btn:hover {
           border-color: var(--accent, #00e5ff);
-          box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
         }
+        
+        .nav-dark .theme-toggle-btn:hover { box-shadow: 0 0 10px rgba(0, 229, 255, 0.2); }
+        .nav-light .theme-toggle-btn:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
 
         .theme-toggle-circle {
-          width: 22px;
-          height: 22px;
+          width: 24px;
+          height: 24px;
           background: var(--accent, #00e5ff);
           border-radius: 50%;
           display: flex;
@@ -216,14 +303,17 @@ export default function Nav({ theme, onToggleTheme }) {
           justify-content: center;
           color: #000;
           transform: translateX(0);
-          transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-          box-shadow: 0 0 10px var(--accent, #00e5ff);
+          transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
         }
 
         .theme-toggle-circle.light-mode {
-          transform: translateX(24px);
+          transform: translateX(22px);
         }
+        
+        .nav-dark .theme-toggle-circle { box-shadow: 0 0 10px var(--accent, #00e5ff); }
+        .nav-light .theme-toggle-circle { box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
 
+        /* Shining CTA Button */
         .modern-cta-btn {
           padding: 10px 24px;
           font-size: 13px;
@@ -235,16 +325,39 @@ export default function Nav({ theme, onToggleTheme }) {
           border-radius: 30px;
           text-decoration: none;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 15px rgba(0, 229, 255, 0.2);
-          display: none; 
+          display: inline-flex; /* Default to inline-flex so it shows in mobile menu */
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .nav-dark .modern-cta-btn { box-shadow: 0 4px 15px rgba(0, 229, 255, 0.2); }
+        .nav-light .modern-cta-btn { box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        .modern-cta-btn::before {
+          content: '';
+          position: absolute;
+          top: 0; left: -100%;
+          width: 50%; height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+          transform: skewX(-20deg);
+          animation: button-shine 3s infinite;
+        }
+
+        @keyframes button-shine {
+          0% { left: -100%; }
+          20% { left: 200%; }
+          100% { left: 200%; }
         }
 
         .modern-cta-btn:hover {
           transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(0, 229, 255, 0.4);
           background: #fff;
         }
+        
+        .nav-dark .modern-cta-btn:hover { box-shadow: 0 6px 20px rgba(0, 229, 255, 0.4); }
+        .nav-light .modern-cta-btn:hover { box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
 
+        /* Mobile Menu Elements */
         .hamburger-btn {
           background: none;
           border: none;
@@ -260,11 +373,10 @@ export default function Nav({ theme, onToggleTheme }) {
 
         .mobile-menu-overlay {
           position: fixed;
-          top: 80px;
+          top: 0; 
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(10, 10, 10, 0.95);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
           z-index: 99;
@@ -274,7 +386,12 @@ export default function Nav({ theme, onToggleTheme }) {
           justify-content: center;
           gap: 30px;
           animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: background 0.4s ease;
         }
+        
+        /* THEME-SPECIFIC OVERLAY BACKGROUNDS */
+        .menu-dark { background: rgba(10, 10, 10, 0.95); }
+        .menu-light { background: rgba(250, 250, 250, 0.95); }
 
         .mobile-nav-link {
           font-family: var(--font-display, 'Syne', sans-serif);
@@ -291,18 +408,24 @@ export default function Nav({ theme, onToggleTheme }) {
           color: var(--accent, #00e5ff);
           transform: scale(1.05);
         }
+        
+        .menu-dark .mobile-nav-link:hover, .menu-dark .mobile-nav-link.active {
+           text-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+        }
+        .menu-light .mobile-nav-link:hover, .menu-light .mobile-nav-link.active {
+           text-shadow: none;
+        }
 
         @keyframes slideDown {
           from { opacity: 0; transform: translateY(-20px); }
           to { opacity: 1; transform: translateY(0); }
         }
 
+        /* --- RESPONSIVE BREAKPOINTS --- */
         @media (max-width: 820px) {
           .nav-desktop { display: none !important; }
-          #hamburger { display: flex !important; }
-        }
-        @media (min-width: 821px) {
-          #nav-cta { display: inline-flex !important; }
+          #nav-cta { display: none !important; } /* Hide CTA specifically from Top Bar on mobile */
+          #hamburger { display: flex !important; z-index: 102; }
         }
       `}</style>
     </>
