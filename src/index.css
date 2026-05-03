@@ -33,9 +33,9 @@
 }
 
 [data-theme="light"] {
-  --bg:        #EFF3F8;
+  --bg:        #dfe7f1;
   --bg2:       #F8FAFC;
-  --bg3:       #E8EEF5;
+  --bg3:       rgb(186, 204, 225);
   --surface:   #FFFFFF;
   --surface2:  #F2F6FB;
   --border:    rgba(0, 144, 187, 0.13);
