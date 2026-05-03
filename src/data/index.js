@@ -1,170 +1,210 @@
-// ─── EDIT THIS FILE TO CUSTOMIZE YOUR PORTFOLIO ───────────────────────────
+// ✏️ Edit this file to customize all content for Gen O
 
-export const COMPANY = {
-  name: "Nexus Studio",
-  tagline: "We craft digital experiences that matter.",
-  description:
-    "A tight-knit team of 8 builders, designers, and strategists turning bold ideas into polished digital products.",
-  email: "hello@nexusstudio.io",
-  phone: "+1 (555) 000-0000",
-  address: "42 Innovation Drive, San Francisco, CA",
-  founded: "2019",
-  socials: {
-    github: "https://github.com",
-    linkedin: "https://linkedin.com",
-    twitter: "https://twitter.com",
-    dribbble: "https://dribbble.com",
+export const siteData = {
+  company: {
+    name: "Gen O",
+    tagline: "We Build What's Next",
+    description: "A software development & solutions company crafting digital products that move businesses forward.",
+    email: "hello@geno.dev",
+    phone: "+94 77 123 4567",
+    address: "Colombo, Sri Lanka",
+    year: 2024,
+  },
+
+  nav: [
+    { label: "Home",     path: "/" },
+    { label: "Projects", path: "/projects" },
+    { label: "Services", path: "/services" },
+    { label: "About",    path: "/about" },
+    { label: "Contact",  path: "/contact" },
+  ],
+
+  stats: [
+    { num: "40+",  label: "Projects Shipped" },
+    { num: "98%",  label: "Client Satisfaction" },
+    { num: "15+",  label: "Tech Stack" },
+    { num: "3yrs", label: "In Business" },
+  ],
+
+  services: [
+    {
+      id: 1,
+      icon: "web",
+      title: "Web Development",
+      desc: "Full-stack web applications built with modern frameworks. React, Next.js, Node — we ship production-ready, performant, and scalable.",
+      tags: ["React", "Next.js", "Node.js"],
+    },
+    {
+      id: 2,
+      icon: "mobile",
+      title: "Mobile Apps",
+      desc: "Cross-platform mobile experiences with React Native. One codebase, two platforms, zero compromise on quality.",
+      tags: ["React Native", "Expo", "iOS/Android"],
+    },
+    {
+      id: 3,
+      icon: "cloud",
+      title: "Cloud & DevOps",
+      desc: "Architect and deploy scalable infrastructure on AWS, GCP, or Azure. CI/CD pipelines, containers, and everything in between.",
+      tags: ["AWS", "Docker", "Kubernetes"],
+    },
+    {
+      id: 4,
+      icon: "ai",
+      title: "AI Integration",
+      desc: "Embed intelligence into your products. Custom LLM workflows, automation pipelines, and AI-powered features that actually work.",
+      tags: ["OpenAI", "LangChain", "Python"],
+    },
+    {
+      id: 5,
+      icon: "design",
+      title: "UI/UX Design",
+      desc: "Design systems, interactive prototypes, and pixel-perfect interfaces. We design for delight and build for conversion.",
+      tags: ["Figma", "Design Systems", "Prototyping"],
+    },
+    {
+      id: 6,
+      icon: "api",
+      title: "API & Backend",
+      desc: "Robust REST and GraphQL APIs, database architecture, and microservices that scale with your growth.",
+      tags: ["GraphQL", "PostgreSQL", "Redis"],
+    },
+  ],
+
+  projects: [
+    {
+      id: 1,
+      title: "FlowBoard",
+      category: "SaaS",
+      tags: ["React", "Node.js", "PostgreSQL"],
+      desc: "A real-time project management platform with kanban boards, time tracking, and team analytics dashboards.",
+      longDesc: "FlowBoard is a comprehensive project management SaaS built for distributed teams. Features include drag-and-drop kanban boards with real-time sync, Gantt chart views, automated time tracking, resource allocation, and custom reporting. Handles 10,000+ concurrent users.",
+      color: "#00C8FF",
+      year: 2024,
+      live: "#",
+      featured: true,
+    },
+    {
+      id: 2,
+      title: "ShopStream",
+      category: "E-Commerce",
+      tags: ["Next.js", "Stripe", "Sanity"],
+      desc: "Headless e-commerce platform with a custom CMS, inventory management, and real-time analytics.",
+      longDesc: "ShopStream is a headless commerce platform that gives brands full control over their storefront. Built with Next.js for blazing speed, Stripe for payments, and a custom Sanity CMS. Includes inventory sync, multi-currency support, and a conversion-optimized checkout flow.",
+      color: "#22D3EE",
+      year: 2024,
+      live: "#",
+      featured: true,
+    },
+    {
+      id: 3,
+      title: "MediTrack",
+      category: "HealthTech",
+      tags: ["React Native", "Firebase", "HL7"],
+      desc: "Healthcare appointment and patient records management mobile app used across 12 clinics.",
+      longDesc: "MediTrack streamlines patient management for independent clinics. The React Native app supports appointment booking, digital health records (HL7 compliant), prescription management, and doctor-patient messaging. Deployed across 12 clinics in Sri Lanka.",
+      color: "#34D399",
+      year: 2023,
+      live: "#",
+      featured: false,
+    },
+    {
+      id: 4,
+      title: "LogiPulse",
+      category: "Logistics",
+      tags: ["React", "Python", "AWS"],
+      desc: "Supply chain visibility platform with live GPS tracking, route optimization, and predictive analytics.",
+      longDesc: "LogiPulse gives logistics companies end-to-end visibility. Features include real-time GPS tracking on an interactive map, AI-powered route optimization, delivery ETA predictions, and a driver mobile app. Reduced delivery costs by 23% for launch partner.",
+      color: "#F59E0B",
+      year: 2023,
+      live: "#",
+      featured: true,
+    },
+    {
+      id: 5,
+      title: "EduSpark",
+      category: "EdTech",
+      tags: ["Next.js", "WebRTC", "MongoDB"],
+      desc: "Live online tutoring platform with interactive whiteboards, session recording, and payment processing.",
+      longDesc: "EduSpark connects students with tutors through live video sessions powered by WebRTC. Features include collaborative whiteboards, session recording, AI-generated session summaries, progress tracking, and an integrated payment system with subscription plans.",
+      color: "#A78BFA",
+      year: 2023,
+      live: "#",
+      featured: false,
+    },
+    {
+      id: 6,
+      title: "FinLens",
+      category: "FinTech",
+      tags: ["React", "Django", "PostgreSQL"],
+      desc: "Personal finance dashboard with bank sync, smart categorization, budgeting, and investment tracking.",
+      longDesc: "FinLens aggregates financial data from multiple banks via open banking APIs, automatically categorizes transactions using ML, and provides insights on spending patterns. Includes budget planning, debt tracking, and investment portfolio visualization.",
+      color: "#FB923C",
+      year: 2024,
+      live: "#",
+      featured: false,
+    },
+  ],
+
+  techStack: [
+    "React", "Next.js", "TypeScript", "Node.js", "Python",
+    "React Native", "GraphQL", "PostgreSQL", "MongoDB", "Redis",
+    "AWS", "Docker", "Kubernetes", "Figma", "TailwindCSS",
+  ],
+
+  process: [
+    { step: "01", title: "Discover", desc: "Deep-dive into your goals, users, and constraints. We ask the hard questions before writing a line of code." },
+    { step: "02", title: "Design", desc: "Wireframes to high-fidelity prototypes. We design systems, not screens — scalable and brand-aligned." },
+    { step: "03", title: "Build",   desc: "Agile sprints with weekly demos. Clean architecture, code reviews, and test coverage baked in." },
+    { step: "04", title: "Launch",  desc: "CI/CD deployment, monitoring setup, and performance optimization. We ship and we stick around." },
+  ],
+
+  team: [
+    {
+      initials: "GE",
+      name: "Gehan Ekanayake",
+      role: "Founder & CTO",
+      bio: "Full-stack architect with 8+ years building SaaS products. React, Node, and cloud infrastructure obsessive.",
+    },
+    {
+      initials: "ND",
+      name: "Nimasha De Silva",
+      role: "Lead UI/UX Designer",
+      bio: "Designs systems, not just screens. Former product designer at a Series B startup in Singapore.",
+    },
+    {
+      initials: "KP",
+      name: "Kasun Perera",
+      role: "Backend Engineer",
+      bio: "API architect and database specialist. Obsessed with performance, reliability, and elegant data models.",
+    },
+    {
+      initials: "RM",
+      name: "Ravi Mendis",
+      role: "Mobile Engineer",
+      bio: "React Native specialist who's shipped 15+ apps to the App Store and Google Play.",
+    },
+  ],
+
+  values: [
+    { title: "Craft First",      desc: "We obsess over details that most overlook. Every pixel and every function matters." },
+    { title: "Radical Honesty",  desc: "We tell clients what they need to hear, not what sounds good. Trust is built on truth." },
+    { title: "Ship & Iterate",   desc: "Perfect is the enemy of shipped. We move fast, learn faster, and improve always." },
+    { title: "Long-term Partners", desc: "We don't disappear after launch. We grow with the products we build." },
+  ],
+
+  footer: {
+    links: [
+      { label: "Privacy Policy", path: "#" },
+      { label: "Terms",          path: "#" },
+      { label: "Careers",        path: "#" },
+      { label: "Blog",           path: "#" },
+    ],
+    socials: [
+      { label: "GitHub",   url: "https://github.com" },
+      { label: "LinkedIn", url: "https://linkedin.com" },
+      { label: "Twitter",  url: "https://twitter.com" },
+      { label: "Dribbble", url: "https://dribbble.com" },
+    ],
   },
 };
-
-export const TEAM = [
-  { name: "Alex Rivera", role: "CEO & Lead Architect", avatar: "AR" },
-  { name: "Sam Chen", role: "Full-Stack Engineer", avatar: "SC" },
-  { name: "Jordan Lee", role: "UI/UX Designer", avatar: "JL" },
-  { name: "Morgan Blake", role: "Mobile Developer", avatar: "MB" },
-  { name: "Taylor Kim", role: "Backend Engineer", avatar: "TK" },
-  { name: "Casey Patel", role: "DevOps & Cloud", avatar: "CP" },
-  { name: "Riley Nguyen", role: "Project Manager", avatar: "RN" },
-  { name: "Drew Santos", role: "QA & Testing Lead", avatar: "DS" },
-];
-
-export const SERVICES = [
-  {
-    id: "web",
-    icon: "◈",
-    title: "Web Applications",
-    description:
-      "Scalable, performant web apps built with modern frameworks. From MVPs to enterprise-grade platforms.",
-    tech: ["React", "Next.js", "Vue", "Node.js"],
-  },
-  {
-    id: "mobile",
-    icon: "◉",
-    title: "Mobile Apps",
-    description:
-      "Native and cross-platform mobile experiences for iOS and Android that users actually love.",
-    tech: ["React Native", "Flutter", "Swift", "Kotlin"],
-  },
-  {
-    id: "pos",
-    icon: "◇",
-    title: "POS Systems",
-    description:
-      "Custom point-of-sale solutions that streamline retail and restaurant operations end-to-end.",
-    tech: ["Custom Hardware", "Cloud Sync", "Offline Mode"],
-  },
-  {
-    id: "design",
-    icon: "◎",
-    title: "UI/UX Design",
-    description:
-      "Research-driven design systems and interfaces that convert visitors into loyal customers.",
-    tech: ["Figma", "Prototyping", "Design Systems"],
-  },
-  {
-    id: "cloud",
-    icon: "◌",
-    title: "Cloud & DevOps",
-    description:
-      "Robust infrastructure, CI/CD pipelines, and cloud architecture that scales with your business.",
-    tech: ["AWS", "GCP", "Docker", "Kubernetes"],
-  },
-  {
-    id: "api",
-    icon: "◈",
-    title: "API & Integrations",
-    description:
-      "Seamless third-party integrations and custom APIs that connect your ecosystem.",
-    tech: ["REST", "GraphQL", "Webhooks", "OAuth"],
-  },
-];
-
-export const PROJECTS = [
-  {
-    id: 1,
-    title: "Orion POS",
-    category: "POS System",
-    year: "2024",
-    description:
-      "A complete point-of-sale overhaul for a 30-location restaurant chain. Real-time inventory, offline-first architecture, and a staff-training time cut by 60%.",
-    tags: ["React Native", "Node.js", "PostgreSQL", "AWS"],
-    color: "#FF6B35",
-    result: "60% faster onboarding",
-  },
-  {
-    id: 2,
-    title: "VaultPay",
-    category: "Web Application",
-    year: "2024",
-    description:
-      "A fintech dashboard for a payments startup processing $2M+ monthly. End-to-end encrypted, SOC2 compliant, with real-time analytics.",
-    tags: ["Next.js", "TypeScript", "Prisma", "Stripe"],
-    color: "#00D4AA",
-    result: "$2M+ monthly volume",
-  },
-  {
-    id: 3,
-    title: "FleetTrack",
-    category: "Mobile App",
-    year: "2023",
-    description:
-      "Cross-platform logistics app for 500+ delivery drivers. Live GPS tracking, route optimization, and automated proof-of-delivery.",
-    tags: ["Flutter", "Google Maps API", "Firebase", "Python"],
-    color: "#7B61FF",
-    result: "500+ active drivers",
-  },
-  {
-    id: 4,
-    title: "MedSync",
-    category: "Web Application",
-    year: "2023",
-    description:
-      "HIPAA-compliant patient portal connecting 3 hospitals. Appointment scheduling, secure messaging, and EHR integration.",
-    tags: ["React", "Django", "PostgreSQL", "Redis"],
-    color: "#FF3D71",
-    result: "3 hospitals connected",
-  },
-  {
-    id: 5,
-    title: "Cultivate",
-    category: "Mobile App",
-    year: "2022",
-    description:
-      "A habit-tracking app that reached #12 in the App Store productivity category within 2 weeks of launch.",
-    tags: ["React Native", "Node.js", "MongoDB", "Expo"],
-    color: "#FFD60A",
-    result: "#12 App Store rank",
-  },
-  {
-    id: 6,
-    title: "ShopStream",
-    category: "E-Commerce Platform",
-    year: "2022",
-    description:
-      "Headless commerce platform for a fashion brand doing 10k+ orders/month. 99.9% uptime, sub-200ms load times.",
-    tags: ["Next.js", "Shopify", "Vercel", "Algolia"],
-    color: "#00B4D8",
-    result: "10k+ orders/month",
-  },
-];
-
-export const TECH_STACK = [
-  { name: "React", category: "Frontend" },
-  { name: "Next.js", category: "Frontend" },
-  { name: "Vue.js", category: "Frontend" },
-  { name: "TypeScript", category: "Language" },
-  { name: "Node.js", category: "Backend" },
-  { name: "Python", category: "Backend" },
-  { name: "Django", category: "Backend" },
-  { name: "PostgreSQL", category: "Database" },
-  { name: "MongoDB", category: "Database" },
-  { name: "Redis", category: "Database" },
-  { name: "React Native", category: "Mobile" },
-  { name: "Flutter", category: "Mobile" },
-  { name: "Swift", category: "Mobile" },
-  { name: "AWS", category: "Cloud" },
-  { name: "GCP", category: "Cloud" },
-  { name: "Docker", category: "DevOps" },
-  { name: "Kubernetes", category: "DevOps" },
-  { name: "Figma", category: "Design" },
-];

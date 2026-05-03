@@ -1,32 +1,56 @@
-import { useState, useEffect } from 'react';
-import { PROJECTS } from '../data';
+import { useState } from 'react';
+import { siteData } from '../data';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
-function ProjectModal({ project, onClose }) {
-  useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && onClose();
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
+const ALL = 'All';
 
+function ProjectModal({ project, onClose }) {
+  if (!project) return null;
   return (
-    <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal">
-        <button className="modal-close" onClick={onClose}>✕</button>
-        <div className="modal-color-bar" style={{ background: project.color }} />
-        <h2>{project.title}</h2>
-        <div className="modal-meta">
-          <span className="project-category">{project.category}</span>
-          <span className="project-year">{project.year}</span>
-          <span className="project-result">{project.result}</span>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+        {/* Header bar */}
+        <div style={{
+          padding: '22px 28px',
+          borderBottom: '1px solid var(--border)',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{ width: 8, height: 8, borderRadius: '50%', background: project.color }} />
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text3)',
+              letterSpacing: '2px', textTransform: 'uppercase' }}>{project.category}</span>
+          </div>
+          <button onClick={onClose} style={{
+            background: 'none', border: '1px solid var(--border)',
+            color: 'var(--text2)', cursor: 'pointer', padding: '4px 10px',
+            fontFamily: 'var(--font-mono)', fontSize: 12, borderRadius: 2,
+            transition: 'border-color 0.2s, color 0.2s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text2)'; }}
+          >✕ Close</button>
         </div>
-        <p>{project.description}</p>
-        <div className="tech-tags">
-          {project.tags.map((t) => (
-            <span className="tech-tag" key={t} style={{ color: project.color, borderColor: `${project.color}33` }}>
-              {t}
-            </span>
-          ))}
+
+        {/* Content */}
+        <div style={{ padding: '32px 28px' }}>
+          <div style={{ width: 40, height: 3, background: project.color, marginBottom: 20, borderRadius: 2 }} />
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 34, fontWeight: 800,
+            color: 'var(--text)', letterSpacing: '-1px', marginBottom: 8 }}>{project.title}</h2>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text3)',
+            letterSpacing: '2px', textTransform: 'uppercase' }}>{project.year}</span>
+
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--text2)',
+            lineHeight: 1.75, margin: '24px 0' }}>{project.longDesc}</p>
+
+          {/* Tags */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 32 }}>
+            {project.tags.map((t) => (
+              <span key={t} className="tech-badge">{t}</span>
+            ))}
+          </div>
+
+          <a href={project.live} target="_blank" rel="noreferrer" className="btn-primary"
+            style={{ textDecoration: 'none' }}>View Live →</a>
         </div>
       </div>
     </div>
@@ -34,72 +58,102 @@ function ProjectModal({ project, onClose }) {
 }
 
 export default function Projects() {
+  const sectRef = useScrollAnimation();
+  const categories = [ALL, ...Array.from(new Set(siteData.projects.map((p) => p.category)))];
+  const [active, setActive] = useState(ALL);
   const [selected, setSelected] = useState(null);
-  const [filter, setFilter] = useState('All');
-  useScrollAnimation();
 
-  const categories = ['All', ...new Set(PROJECTS.map((p) => p.category))];
-  const filtered = filter === 'All' ? PROJECTS : PROJECTS.filter((p) => p.category === filter);
+  const filtered = active === ALL
+    ? siteData.projects
+    : siteData.projects.filter((p) => p.category === active);
 
   return (
-    <main className="page">
-      <div className="container">
-        <p className="section-label animate-up">Portfolio</p>
-        <h1 className="section-title animate-up">
-          Work that <span className="serif">speaks</span>
-        </h1>
+    <div ref={sectRef}>
+      <section style={{ paddingTop: 120 }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
-        {/* Filter tabs */}
-        <div
-          className="animate-up"
-          style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '2.5rem' }}
-        >
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              style={{
-                background: filter === cat ? 'var(--accent)' : 'var(--bg-1)',
-                color: filter === cat ? 'var(--bg)' : 'var(--text-muted)',
-                border: '1px solid',
-                borderColor: filter === cat ? 'var(--accent)' : 'var(--border)',
-                borderRadius: '100px',
-                padding: '0.45rem 1.1rem',
-                fontFamily: 'var(--ff-mono)',
-                fontSize: '0.75rem',
+          {/* Header */}
+          <div className="reveal" style={{ marginBottom: 60 }}>
+            <span className="section-tag">// portfolio</span>
+            <h1 className="section-title" style={{ fontSize: 'clamp(38px,5vw,64px)', letterSpacing: '-2px' }}>
+              Our Work
+            </h1>
+            <div className="section-line" style={{ margin: '18px 0 0' }} />
+          </div>
+
+          {/* Filter tabs */}
+          <div className="reveal" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 48 }}>
+            {categories.map((cat) => (
+              <button key={cat} onClick={() => setActive(cat)} style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase',
+                padding: '8px 18px',
+                background: active === cat ? 'var(--accent)' : 'var(--surface)',
+                color: active === cat ? '#07090D' : 'var(--text3)',
+                border: `1px solid ${active === cat ? 'var(--accent)' : 'var(--border)'}`,
                 cursor: 'pointer',
-                letterSpacing: '0.05em',
-                transition: 'all 0.2s',
-                fontWeight: filter === cat ? 700 : 400,
+                transition: 'all 0.25s',
+                borderRadius: 2,
               }}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+              onMouseEnter={e => { if (active !== cat) { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}}
+              onMouseLeave={e => { if (active !== cat) { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text3)'; }}}
+              >{cat}</button>
+            ))}
+          </div>
 
-        <div className="projects-list animate-up" style={{ marginTop: '2.5rem' }}>
-          {filtered.map((p, i) => (
-            <div className="project-row" key={p.id} onClick={() => setSelected(p)}>
-              <div>
-                <span className="project-num" style={{ color: p.color }}>0{i + 1}</span>
-                <h3 className="project-title">{p.title}</h3>
-                <p className="project-desc">{p.description.slice(0, 100)}…</p>
-                <div className="project-tags-row">
-                  {p.tags.slice(0, 3).map((t) => (
-                    <span className="tech-tag" key={t}>{t}</span>
+          {/* Projects grid */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+            gap: 24,
+          }}>
+            {filtered.map((p, i) => (
+              <div key={p.id} className="card reveal" style={{
+                padding: '28px 26px', cursor: 'pointer',
+                animationDelay: `${i * 0.07}s`,
+              }}
+              onClick={() => setSelected(p)}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text3)',
+                    letterSpacing: '2px', textTransform: 'uppercase' }}>{p.year}</span>
+                  <span style={{
+                    fontFamily: 'var(--font-mono)', fontSize: 10,
+                    color: p.color, border: `1px solid ${p.color}44`,
+                    padding: '3px 10px', textTransform: 'uppercase', letterSpacing: '1px',
+                    borderRadius: 2,
+                  }}>{p.category}</span>
+                </div>
+
+                <div style={{ width: 32, height: 3, background: p.color, marginBottom: 18, borderRadius: 2 }} />
+
+                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 800,
+                  color: 'var(--text)', marginBottom: 10, letterSpacing: '-0.5px' }}>{p.title}</h3>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--text2)',
+                  lineHeight: 1.65, marginBottom: 20 }}>{p.desc}</p>
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 20 }}>
+                  {p.tags.map((t) => (
+                    <span key={t} style={{
+                      fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text3)',
+                      background: 'var(--surface2)', border: '1px solid var(--border)',
+                      padding: '3px 8px',
+                    }}>{t}</span>
                   ))}
                 </div>
-              </div>
-              <span className="project-category">{p.category}</span>
-              <span className="project-result">{p.result}</span>
-              <span className="project-year">{p.year}</span>
-            </div>
-          ))}
-        </div>
-      </div>
 
+                <span style={{
+                  fontFamily: 'var(--font-display)', fontSize: 12, fontWeight: 700,
+                  color: p.color, letterSpacing: '1px', textTransform: 'uppercase',
+                }}>View Details →</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Modal */}
       {selected && <ProjectModal project={selected} onClose={() => setSelected(null)} />}
-    </main>
+    </div>
   );
 }
