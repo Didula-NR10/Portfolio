@@ -1,225 +1,189 @@
 import { useState } from 'react';
-import { COMPANY } from '../data';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { siteData } from '../data';
 
-const SERVICES_LIST = [
-  'Web Application', 'Mobile App', 'POS System',
-  'UI/UX Design', 'Cloud / DevOps', 'API Integration', 'Other',
-];
+function TerminalBlock() {
+  return (
+    <div style={{
+      background: 'var(--bg)',
+      border: '1px solid var(--border)',
+      fontFamily: 'var(--font-mono)',
+      fontSize: 13,
+      lineHeight: 1.9,
+      overflow: 'hidden',
+    }}>
+      {/* Terminal bar */}
+      <div style={{
+        background: 'var(--surface2)', padding: '10px 14px',
+        display: 'flex', alignItems: 'center', gap: 7,
+        borderBottom: '1px solid var(--border)',
+      }}>
+        {['#FF5F57','#FFBD2E','#28C840'].map((c, i) => (
+          <div key={i} style={{ width: 11, height: 11, borderRadius: '50%', background: c }} />
+        ))}
+        <span style={{ marginLeft: 8, fontSize: 11, color: 'var(--text3)', letterSpacing: '1px' }}>
+          geno@studio — contact
+        </span>
+      </div>
 
-const BUDGETS = [
-  'Under $10k', '$10k – $25k', '$25k – $50k', '$50k – $100k', '$100k+',
-];
+      {/* Content */}
+      <div style={{ padding: '20px 22px' }}>
+        {[
+          { prompt: true, text: 'contact --init', delay: 0 },
+          { color: 'var(--text3)', text: 'Initializing communication channel...', delay: 0.2 },
+          { color: 'var(--text3)', text: 'Locating nearest Gen O engineer...', delay: 0.5 },
+          { color: '#28C840', text: '✓ Channel established', delay: 0.8 },
+          { color: 'var(--text2)', text: `📍 ${siteData.company.email}`, delay: 1.0 },
+          { color: 'var(--text2)', text: `📞 ${siteData.company.phone}`, delay: 1.1 },
+          { color: 'var(--text2)', text: `🌍 ${siteData.company.address}`, delay: 1.2 },
+          { prompt: true, text: '', cursor: true, delay: 1.4 },
+        ].map((line, i) => (
+          <div key={i} style={{
+            display: 'flex', gap: 8, alignItems: 'center',
+            color: line.color || 'var(--text)',
+            opacity: 0, animation: `fadeIn 0.4s ease forwards ${line.delay}s`,
+          }}>
+            {line.prompt && (
+              <span style={{ color: 'var(--accent)', userSelect: 'none' }}>geno@studio:~$</span>
+            )}
+            <span>{line.text}</span>
+            {line.cursor && (
+              <span style={{
+                display: 'inline-block', width: 8, height: 16,
+                background: 'var(--accent)',
+                animation: 'blink 1s step-end infinite',
+                verticalAlign: 'middle',
+              }} />
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Contact() {
-  useScrollAnimation();
+  const sectRef = useScrollAnimation();
+  const [form, setForm] = useState({ name: '', company: '', email: '', service: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({
-    name: '', email: '', company: '', service: '', budget: '', message: '',
-  });
 
-  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Replace this with your actual form submission logic (e.g., fetch to an API)
-    console.log('Form submitted:', form);
     setSubmitted(true);
+    setTimeout(() => { setSubmitted(false); setForm({ name: '', company: '', email: '', service: '', message: '' }); }, 4000);
   };
 
   return (
-    <main className="page">
-      <div className="container">
-        <p className="section-label animate-up">Get In Touch</p>
+    <div ref={sectRef}>
 
-        <div className="contact-layout">
-          {/* ─── Left info column ────────────────────────────────── */}
-          <div className="animate-up">
-            <h1 className="contact-info" style={{ fontSize: 'clamp(2rem,4vw,3rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: '1.25rem' }}>
-              Let's build<br />
-              <span style={{ fontFamily: 'var(--ff-serif)', fontStyle: 'italic', fontWeight: 400, color: 'var(--text-muted)' }}>
-                something great
-              </span>
-            </h1>
-            <p style={{ color: 'var(--text-muted)', lineHeight: '1.75', marginBottom: '2.5rem', fontSize: '0.95rem' }}>
-              Tell us about your project and we'll get back to you within one business
-              day. No pushy sales calls — just a straight conversation about whether
-              we're a good fit.
-            </p>
+      {/* ── HERO ── */}
+      <section style={{ paddingTop: 140, paddingBottom: 80 }}>
+        <div className="reveal">
+          <span className="section-tag">// get in touch</span>
+          <h1 className="section-title" style={{ fontSize: 'clamp(38px,5vw,64px)', letterSpacing: '-2px' }}>
+            Let's Build<br/>Something Great
+          </h1>
+          <div className="section-line" style={{ margin: '18px 0 0' }} />
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 17, color: 'var(--text2)',
+            lineHeight: 1.75, maxWidth: 440, marginTop: 24 }}>
+            Tell us about your idea. We respond to every inquiry within 24 hours with
+            honest thoughts and a clear next step.
+          </p>
+        </div>
+      </section>
 
-            <div className="contact-links">
-              <a href={`mailto:${COMPANY.email}`} className="contact-link">
-                <span className="contact-link-icon">✉</span>
-                <span>{COMPANY.email}</span>
-              </a>
-              <a href={`tel:${COMPANY.phone}`} className="contact-link">
-                <span className="contact-link-icon">☏</span>
-                <span>{COMPANY.phone}</span>
-              </a>
-              <div className="contact-link" style={{ cursor: 'default' }}>
-                <span className="contact-link-icon">◎</span>
-                <span>{COMPANY.address}</span>
+      {/* ── CONTACT BODY ── */}
+      <section style={{ background: 'var(--bg2)', paddingTop: 80, paddingBottom: 100, transition: 'background var(--transition)' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto',
+          display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 60, alignItems: 'start' }}>
+
+          {/* Left — info */}
+          <div>
+            <div className="reveal-left" style={{ marginBottom: 32 }}>
+              <TerminalBlock />
+            </div>
+
+            {/* Response time note */}
+            <div className="reveal-left card" style={{ padding: '22px 20px', display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#28C840',
+                marginTop: 5, flexShrink: 0, boxShadow: '0 0 8px #28C84066',
+                animation: 'glowPulse 2s ease-in-out infinite' }} />
+              <div>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>
+                  Usually respond within 24 hours
+                </p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--text2)' }}>
+                  For urgent projects, mention it in your message and we'll prioritize.
+                </p>
               </div>
-            </div>
-
-            {/* Office hours */}
-            <div
-              style={{
-                marginTop: '2.5rem',
-                padding: '1.5rem',
-                background: 'var(--bg-1)',
-                border: '1px solid var(--border)',
-                borderRadius: '12px',
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: 'var(--ff-mono)',
-                  fontSize: '0.7rem',
-                  color: 'var(--accent)',
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  marginBottom: '0.75rem',
-                }}
-              >
-                Office Hours
-              </p>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: '1.65' }}>
-                Monday – Friday: 9am – 6pm (PST)<br />
-                We typically respond within 4 hours.
-              </p>
-            </div>
-
-            {/* Social links */}
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '2rem', flexWrap: 'wrap' }}>
-              {Object.entries(COMPANY.socials).map(([name, url]) => (
-                <a
-                  key={name}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    background: 'var(--bg-1)',
-                    border: '1px solid var(--border)',
-                    borderRadius: '8px',
-                    padding: '0.45rem 0.9rem',
-                    fontSize: '0.72rem',
-                    fontFamily: 'var(--ff-mono)',
-                    color: 'var(--text-dim)',
-                    textTransform: 'capitalize',
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--accent)';
-                    e.currentTarget.style.color = 'var(--accent)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--border)';
-                    e.currentTarget.style.color = 'var(--text-dim)';
-                  }}
-                >
-                  {name}
-                </a>
-              ))}
             </div>
           </div>
 
-          {/* ─── Contact form ─────────────────────────────────────── */}
-          <div className="contact-form animate-up">
+          {/* Right — form */}
+          <div className="reveal-right">
             {submitted ? (
-              <div className="form-success">
-                <div className="checkmark">✓</div>
-                <h3>Message received!</h3>
-                <p>
-                  Thanks for reaching out. We'll review your project details and get
-                  back to you within one business day.
+              <div style={{
+                padding: '48px 32px', textAlign: 'center',
+                border: '1px solid #28C84044', background: '#28C84011',
+                animation: 'fadeUp 0.4s ease',
+              }}>
+                <div style={{ fontSize: 40, marginBottom: 16 }}>✓</div>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 800,
+                  color: '#28C840', marginBottom: 10 }}>Message Sent!</h3>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--text2)' }}>
+                  We'll be in touch within 24 hours.
                 </p>
-                <button
-                  onClick={() => setSubmitted(false)}
-                  className="btn btn-outline"
-                  style={{ marginTop: '2rem' }}
-                >
-                  Send another message
-                </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit}>
-                <div className="form-row">
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                   <div className="form-group">
-                    <label>Your Name *</label>
-                    <input
-                      type="text"
-                      placeholder="Jane Smith"
-                      required
-                      value={form.name}
-                      onChange={set('name')}
-                    />
+                    <label className="form-label">Name *</label>
+                    <input name="name" value={form.name} onChange={handleChange}
+                      className="form-input" placeholder="Jane Smith" required />
                   </div>
                   <div className="form-group">
-                    <label>Email Address *</label>
-                    <input
-                      type="email"
-                      placeholder="jane@company.com"
-                      required
-                      value={form.email}
-                      onChange={set('email')}
-                    />
+                    <label className="form-label">Company</label>
+                    <input name="company" value={form.company} onChange={handleChange}
+                      className="form-input" placeholder="Acme Inc." />
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label>Company / Project Name</label>
-                  <input
-                    type="text"
-                    placeholder="Acme Corp"
-                    value={form.company}
-                    onChange={set('company')}
-                  />
-                </div>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Service Needed *</label>
-                    <select required value={form.service} onChange={set('service')}>
-                      <option value="">Select a service…</option>
-                      {SERVICES_LIST.map((s) => (
-                        <option key={s} value={s}>{s}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Budget Range</label>
-                    <select value={form.budget} onChange={set('budget')}>
-                      <option value="">Select a range…</option>
-                      {BUDGETS.map((b) => (
-                        <option key={b} value={b}>{b}</option>
-                      ))}
-                    </select>
-                  </div>
+                  <label className="form-label">Email *</label>
+                  <input type="email" name="email" value={form.email} onChange={handleChange}
+                    className="form-input" placeholder="jane@acme.com" required />
                 </div>
 
                 <div className="form-group">
-                  <label>Tell us about your project *</label>
-                  <textarea
-                    placeholder="What are you building? What's the timeline? Any specific challenges?"
-                    required
-                    value={form.message}
-                    onChange={set('message')}
-                  />
+                  <label className="form-label">Service Needed</label>
+                  <select name="service" value={form.service} onChange={handleChange}
+                    className="form-input" style={{ cursor: 'pointer' }}>
+                    <option value="">Select a service...</option>
+                    {siteData.services.map((s) => (
+                      <option key={s.id} value={s.title}>{s.title}</option>
+                    ))}
+                    <option value="other">Other / Not sure yet</option>
+                  </select>
                 </div>
 
-                <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: '0.95rem', padding: '1rem' }}>
+                <div className="form-group">
+                  <label className="form-label">Message *</label>
+                  <textarea name="message" value={form.message} onChange={handleChange}
+                    className="form-textarea" placeholder="Tell us about your project, timeline, and budget..." required />
+                </div>
+
+                <button type="submit" className="btn-primary" style={{ alignSelf: 'flex-start', marginTop: 8 }}>
                   Send Message →
                 </button>
-
-                <p style={{ marginTop: '1rem', textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-dim)', fontFamily: 'var(--ff-mono)' }}>
-                  We respond within 1 business day. No spam, ever.
-                </p>
               </form>
             )}
           </div>
         </div>
-      </div>
-    </main>
+      </section>
+
+    </div>
   );
 }
