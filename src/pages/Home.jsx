@@ -1,12 +1,33 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { siteData } from '../data';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
-// ඔයාගේ 3D Robot පින්තූරෙ 
-import robotImg from '../assets/robot.jpg'; 
+// ── SELECTED TECH STACK WITH ORIGINAL LOGOS ──
+const techStack = [
+  { 
+    name: 'React.js', 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg', 
+    // Spaced out nicely to fill the empty area
+    style: { top: '5%', left: '10%', animation: 'float1 8s ease-in-out infinite' } 
+  },
+  { 
+    name: 'Node.js', 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg', 
+    style: { top: '25%', right: '5%', animation: 'float2 10s ease-in-out infinite reverse' } 
+  },
+  { 
+    name: 'Python', 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg', 
+    style: { bottom: '15%', left: '20%', animation: 'float3 9s ease-in-out infinite' } 
+  },
+  { 
+    name: 'AWS', 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg', 
+    style: { bottom: '30%', right: '15%', animation: 'float4 11s ease-in-out infinite reverse' } 
+  },
+];
 
-// ─── Minimal, Razor-thin Icons ─────────────────────────────────────
 const icons = {
   web: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="20" height="16" rx="4" ry="4"/><path d="M2 8h20M12 20v-4"/></svg>,
   mobile: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="6" y="2" width="12" height="20" rx="4" ry="4"/><path d="M12 18h.01"/></svg>,
@@ -16,320 +37,342 @@ const icons = {
   api: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
 };
 
-// ─── BACKGROUND 1: LIGHT GLASSMORPHISM (සුදු Theme එකට) ───────────
-function LightGlassBackground({ mousePos }) {
-  return (
-    <div className="glass-wrapper-light" style={{ '--x': `${mousePos.x}px`, '--y': `${mousePos.y}px` }}>
-      {/* දැන් Light Theme එකෙත් පේන්නේ ඔයාගේ 3D Robot වමයි! */}
-      <img src={robotImg} alt="AI Robot" className="robot-bg-image-light" />
-      <div className="frosted-glass-overlay-light"></div>
-      <div className="floating-shape shape-1"></div>
-      <div className="floating-shape shape-2"></div>
-    </div>
-  );
-}
-
-// ─── BACKGROUND 2: DARK X-RAY ROBOT (කළු Theme එකට) ───────────────
-function DarkGlassBackground({ mousePos }) {
-  return (
-    <div className="glass-wrapper-dark" style={{ '--x': `${mousePos.x}px`, '--y': `${mousePos.y}px` }}>
-      <div style={{ position: 'absolute', inset: 0, background: '#020203' }}></div>
-      <img src={robotImg} alt="AI Robot" className="robot-bg-image-dark" />
-      <div className="dark-frosted-overlay"></div>
-      <div className="scanner-glow"></div>
-      <div className="film-grain"></div>
-    </div>
-  );
-}
-
-// ─── MAIN HOME COMPONENT ───────────────────────────────────────────
 export default function Home() {
   const sectRef = useScrollAnimation();
   const featuredProjects = siteData.projects.filter((p) => p.featured);
-  
-  // Theme State
   const [isDark, setIsDark] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
 
   useEffect(() => {
-    // 1. Mouse Tracking
-    const handleMouseMove = (e) => requestAnimationFrame(() => setMousePos({ x: e.clientX, y: e.clientY }));
-    window.addEventListener('mousemove', handleMouseMove);
-
-    // 2. Bulletproof Theme Detection
     const checkTheme = () => {
       const html = document.documentElement;
       const body = document.body;
-      
       const isCurrentlyDark = 
-        html.classList.contains('dark') || 
-        html.classList.contains('dark-mode') || 
-        html.getAttribute('data-theme') === 'dark' ||
-        body.classList.contains('dark') || 
-        body.classList.contains('dark-mode') || 
-        body.getAttribute('data-theme') === 'dark';
-        
+        html.classList.contains('dark') || html.classList.contains('dark-mode') || html.getAttribute('data-theme') === 'dark' ||
+        body.classList.contains('dark') || body.classList.contains('dark-mode') || body.getAttribute('data-theme') === 'dark';
+      
       setIsDark(isCurrentlyDark);
     };
 
     checkTheme();
-
     const observer = new MutationObserver(() => checkTheme());
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme'] });
     observer.observe(document.body, { attributes: true, attributeFilter: ['class', 'data-theme'] });
 
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <div className={`home-container ${isDark ? 'dark-mode' : 'light-mode'}`} ref={sectRef}>
+    <div className={`home-wrapper ${isDark ? 'dark-mode' : 'light-mode'}`} ref={sectRef}>
       
-      {/* ── CSS BLOCK: Magic Variable Switching ── */}
       <style>{`
-        body, html, #root { background-color: var(--bg-color) !important; background-image: none !important; transition: background-color 0.5s ease; }
+        body, html, #root {
+          background-image: none !important;
+          background-color: var(--page-bg) !important;
+          transition: background-color 0.5s ease;
+        }
 
-        /* ── LIGHT THEME VARIABLES ── */
-        .home-container {
-          --bg-color: #f0f3fa;
-          --text-main: #0f172a;
-          --text-muted: #475569;
-          --accent: #4f46e5;
+        .home-wrapper {
+          min-height: 100vh;
+          padding: 100px 24px 24px 24px; 
+          display: flex;
+          justify-content: center;
+          background-color: var(--page-bg);
+        }
+
+        .inner-window {
+          position: relative; 
+          width: 100%;
+          max-width: 1600px;
+          display: flex; 
+          flex-direction: column;
+        }
+
+        .light-mode {
+          --page-bg: #ffffff; 
+          --hero-bento-bg: linear-gradient(135deg, #e4f1f0 0%, #d5e9e9 100%);
+          --alt-bento-bg: linear-gradient(135deg, #f0f7f7 0%, #e6f2f2 100%);
           
-          --card-bg: rgba(255, 255, 255, 0.6);
-          --card-bg-hover: rgba(255, 255, 255, 0.8);
-          --card-border: rgba(255, 255, 255, 1);
-          --card-border-hover: rgba(255, 255, 255, 1);
-          --card-shadow: 0 15px 35px rgba(30, 41, 59, 0.05);
-          --card-shadow-hover: 0 30px 60px rgba(79, 70, 229, 0.12);
+          --text-main: #1c2b33;
+          --text-muted: #5e6d75;
+          --accent: #15797b; 
+          --accent-hover: #105a5c;
           
-          --btn-bg: #1e293b;
-          --btn-bg-hover: #0f172a;
+          --solid-card-bg: #ffffff;
+          --card-border: rgba(21, 121, 123, 0.15);
+          --card-shadow: 0 10px 40px rgba(21, 121, 123, 0.05);
+          --card-shadow-hover: 0 20px 50px rgba(21, 121, 123, 0.12);
+          
+          --btn-bg: #15797b;
+          --btn-bg-hover: #105a5c;
           --btn-text: #ffffff;
-          --btn-outline-bg: rgba(255, 255, 255, 0.7);
-          --btn-outline-border: #cbd5e1;
-          --btn-outline-hover: #ffffff;
+          --btn-outline-bg: transparent;
+          --btn-outline-border: #15797b;
+          --btn-outline-hover: rgba(21, 121, 123, 0.08);
           
-          --pill-bg: rgba(255, 255, 255, 0.9);
-          --pill-border: #e2e8f0;
-          --pill-text: #475569;
-          
-          --icon-bg: #e0e7ff;
-          --icon-border: transparent;
-          
-          --cta-bg: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.5));
+          --pill-bg: #e4f1f0;
+          --pill-text: #15797b;
+          --icon-bg: rgba(21, 121, 123, 0.08);
         }
 
-        /* ── DARK THEME VARIABLES ── */
-        .home-container.dark-mode {
-          --bg-color: #020203;
-          --text-main: #ffffff;
-          --text-muted: #94a3b8;
-          --accent: #00e5ff;
+        .dark-mode {
+          --page-bg: #070b0f; 
+          --hero-bento-bg: linear-gradient(135deg, #0e171b 0%, #152229 100%);
+          --alt-bento-bg: linear-gradient(135deg, #0a1114 0%, #0d161a 100%);
           
-          --card-bg: rgba(255, 255, 255, 0.02);
-          --card-bg-hover: rgba(255, 255, 255, 0.04);
-          --card-border: rgba(255, 255, 255, 0.05);
-          --card-border-hover: rgba(0, 229, 255, 0.3);
-          --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-          --card-shadow-hover: 0 30px 60px rgba(0, 229, 255, 0.1);
+          --text-main: #f0f4f8;
+          --text-muted: #8b9eb0;
+          --accent: #4ad6e8; 
+          --accent-hover: #75e2f0;
           
-          --btn-bg: #ffffff;
-          --btn-bg-hover: #e0f2fe;
-          --btn-text: #000000;
+          --solid-card-bg: #111a20; 
+          --card-border: rgba(74, 214, 232, 0.1);
+          --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+          --card-shadow-hover: 0 20px 50px rgba(74, 214, 232, 0.15);
+          
+          --btn-bg: #4ad6e8;
+          --btn-bg-hover: #75e2f0;
+          --btn-text: #050a0f;
           --btn-outline-bg: rgba(255, 255, 255, 0.05);
-          --btn-outline-border: rgba(255, 255, 255, 0.2);
-          --btn-outline-hover: rgba(255, 255, 255, 0.1);
+          --btn-outline-border: #4ad6e8;
+          --btn-outline-hover: rgba(74, 214, 232, 0.1);
           
-          --pill-bg: rgba(0, 0, 0, 0.4);
-          --pill-border: rgba(255, 255, 255, 0.1);
-          --pill-text: #94a3b8;
-          
-          --icon-bg: rgba(0, 229, 255, 0.1);
-          --icon-border: 1px solid rgba(0, 229, 255, 0.2);
-          
-          --cta-bg: linear-gradient(135deg, rgba(0, 229, 255, 0.05), rgba(0, 0, 0, 0.5));
+          --pill-bg: rgba(74, 214, 232, 0.1);
+          --pill-text: #4ad6e8;
+          --icon-bg: rgba(74, 214, 232, 0.1);
         }
 
-        /* ── BASE STYLES ── */
-        .home-container { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; overflow-x: hidden; position: relative; transition: all 0.5s ease; }
-        .premium-text { font-family: 'Inter', -apple-system, sans-serif; letter-spacing: -0.02em; transition: color 0.5s ease; }
-        .accent-color { color: var(--accent); transition: color 0.5s ease; }
-        
-        /* ── LIGHT BACKGROUND CSS ── */
-        .glass-wrapper-light { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; background: #f0f3fa; }
-        /* Light Theme එකේදී Robot ව ටිකක් ලා කරලා තියෙනවා සුදු මීදුමට ගැලපෙන්න */
-        .robot-bg-image-light { position: absolute; inset: 0; width: 100vw; height: 100vh; object-fit: cover; object-position: center 20%; opacity: 0.9; filter: contrast(1.1) brightness(1.2); }
-        .frosted-glass-overlay-light { position: absolute; inset: 0; background: rgba(240, 243, 250, 0.88); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); mask-image: radial-gradient(500px circle at var(--x) var(--y), transparent 0%, rgba(0,0,0,0.5) 40%, black 100%); -webkit-mask-image: radial-gradient(500px circle at var(--x) var(--y), transparent 0%, rgba(0,0,0,0.5) 40%, black 100%); transition: mask-position 0.1s ease-out; }
-        .floating-shape { position: absolute; border-radius: 20px; background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.2)); border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 20px 40px rgba(79, 70, 229, 0.15); backdrop-filter: blur(10px); }
-        .shape-1 { width: 120px; height: 120px; top: 15%; right: 10%; animation: float 6s ease-in-out infinite; transform: rotate(15deg); }
-        .shape-2 { width: 80px; height: 80px; bottom: 20%; left: 10%; animation: float 8s ease-in-out infinite reverse; transform: rotate(-10deg); border-radius: 50%; }
+        .premium-text { font-family: 'Inter', -apple-system, sans-serif; transition: color 0.5s ease; color: var(--text-muted); }
+        .serif-heading { font-family: 'Playfair Display', 'Merriweather', serif; transition: color 0.5s ease; color: var(--text-main); }
 
-        /* ── DARK BACKGROUND CSS ── */
-        .glass-wrapper-dark { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-        .robot-bg-image-dark { position: absolute; inset: 0; width: 100vw; height: 100vh; object-fit: cover; object-position: center 20%; opacity: 0.9; filter: contrast(1.1) brightness(0.9); }
-        .dark-frosted-overlay { position: absolute; inset: 0; background: rgba(3, 3, 5, 0.95); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); mask-image: radial-gradient(700px circle at var(--x) var(--y), transparent 0%, rgba(0,0,0,0.6) 40%, black 100%); -webkit-mask-image: radial-gradient(700px circle at var(--x) var(--y), transparent 0%, rgba(0,0,0,0.6) 40%, black 100%); transition: mask-position 0.1s ease-out; }
-        .scanner-glow { position: absolute; inset: 0; background: radial-gradient(600px circle at var(--x) var(--y), rgba(0, 229, 255, 0.15) 0%, transparent 60%); mix-blend-mode: screen; }
-        .film-grain { position: absolute; inset: 0; opacity: 0.05; mix-blend-mode: overlay; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        .hero-bento-box {
+          background: var(--hero-bento-bg);
+          border-radius: 40px;
+          position: relative; 
+          z-index: 2;
+          overflow: hidden; 
+          display: flex;
+          min-height: 580px;
+        }
 
-        @keyframes float { 0%, 100% { transform: translateY(0) rotate(15deg); } 50% { transform: translateY(-20px) rotate(20deg); } }
-        @keyframes revealUp { 0% { opacity: 0; transform: translateY(40px); } 100% { opacity: 1; transform: translateY(0); } }
+        .hero-content { 
+          flex: 1; 
+          padding: 6rem 4rem; 
+          display: flex;
+          flex-direction: column;
+          justify-content: center; 
+          position: relative;
+          z-index: 3;
+          opacity: 0; 
+          animation: revealUp 0.8s ease forwards 0.2s; 
+        }
 
-        /* ── ADAPTIVE UI CARDS & BUTTONS ── */
-        .glass-card { position: relative; border-radius: 24px; overflow: hidden; background: var(--card-bg); border: 1px solid var(--card-border); box-shadow: var(--card-shadow); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; }
-        .glass-card:hover { transform: translateY(-8px); box-shadow: var(--card-shadow-hover); border-color: var(--card-border-hover); background: var(--card-bg-hover); }
-        .glass-card-content { position: relative; z-index: 2; padding: 2.5rem; display: flex; flex-direction: column; justify-content: flex-start; height: 100%; }
-        
-        .btn-magnetic { position: relative; display: inline-flex; align-items: center; gap: 12px; padding: 16px 36px; border-radius: 100px; background: var(--btn-bg); color: var(--btn-text); font-weight: 700; text-decoration: none; overflow: hidden; transition: all 0.3s; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); }
-        .btn-magnetic:hover { transform: translateY(-3px) scale(1.02); background: var(--btn-bg-hover); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); }
-        
-        .btn-outline { background: var(--btn-outline-bg); border: 1px solid var(--btn-outline-border); color: var(--text-main); box-shadow: none; backdrop-filter: blur(10px); font-weight: 600; }
-        .btn-outline:hover { background: var(--btn-outline-hover); border-color: var(--text-main); }
-        
-        .glass-pill { padding: 8px 20px; border-radius: 100px; background: var(--pill-bg); border: 1px solid var(--pill-border); color: var(--pill-text); font-size: 0.85rem; font-weight: 600; transition: all 0.5s ease; }
-        
-        .service-icon-box { width: 48px; height: 48px; color: var(--accent); margin-bottom: 1.5rem; background: var(--icon-bg); border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 10px; border: var(--icon-border); transition: all 0.5s ease; }
+        /* ────────────────────────────────────────── */
+        /* ── HUGE 3D TECH LOGOS NO BACKGROUND ── */
+        /* ────────────────────────────────────────── */
+        .tech-stack-container {
+          flex: 1; 
+          position: relative;
+          z-index: 2;
+        }
+
+        .tech-logo-item {
+          position: absolute; 
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          /* ගොඩක් ලොකු සයිස් එකක් දුන්නා Space එක පිරෙන්න */
+          width: clamp(100px, 12vw, 180px);  
+          height: clamp(100px, 12vw, 180px); 
+          /* කිසිම Background එකක් නෑ, Border නෑ */
+          background: transparent; 
+          border: none;
+          cursor: pointer;
+          transition: transform 0.3s ease;
+          /* Logo එකටම ලස්සන 3D Shadow එකක් දාලා තියෙනවා පාවෙනවා වගේ පේන්න */
+          filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15));
+        }
+
+        .tech-logo-item:hover {
+          transform: scale(1.15) !important; /* Hover කරද්දී තවත් ලොකු වෙනවා */
+        }
+
+        .dark-mode .tech-logo-item {
+          filter: drop-shadow(0 15px 25px rgba(0,0,0,0.5));
+        }
+
+        .tech-icon-img {
+          /* Image එක මුළු Size එකම ගන්න හැදුවා */
+          width: 100%; 
+          height: 100%;
+          object-fit: contain;
+        }
+
+        /* 4 Different Floating Animations */
+        @keyframes float1 {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(20px, -25px); }
+        }
+        @keyframes float2 {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(-25px, 20px); }
+        }
+        @keyframes float3 {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(30px, 15px); }
+        }
+        @keyframes float4 {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(-20px, -30px); }
+        }
+
+        /* ── Floating Abstract Shapes ── */
+        .floating-shape-1 { position: absolute; width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--accent); opacity: 0.3; top: 15%; left: 10%; animation: float 6s ease-in-out infinite; }
+        .floating-shape-2 { position: absolute; width: 55px; height: 55px; border-radius: 50%; background: var(--accent); opacity: 0.15; bottom: 12%; left: 28%; animation: float 8s ease-in-out infinite reverse; }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes revealUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
+
+        /* ── Buttons ── */
+        .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .btn-new-primary { padding: 12px 32px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; transition: all 0.3s ease; background-color: var(--btn-bg); color: var(--btn-text); border: 2px solid var(--btn-bg); }
+        .btn-new-primary:hover { background-color: var(--btn-bg-hover); border-color: var(--btn-bg-hover); transform: translateY(-2px); }
+        .btn-new-outline { padding: 12px 32px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; transition: all 0.3s ease; background-color: var(--btn-outline-bg); color: var(--accent); border: 2px solid var(--btn-outline-border); }
+        .btn-new-outline:hover { background-color: var(--btn-outline-hover); transform: translateY(-2px); }
+
+        /* ── SECTIONS ── */
+        .plain-section { padding: 4rem 2rem; background: transparent; }
+        .stat-item { text-align: center; padding: 1rem; }
+        .stat-num { font-size: 3.5rem; font-weight: 800; color: var(--accent); line-height: 1.1; margin-bottom: 0.5rem; }
+        .clean-card { background: transparent; border: 1px solid var(--card-border); border-radius: 24px; padding: 2.5rem; transition: all 0.4s ease; display: flex; flex-direction: column; align-items: flex-start; }
+        .clean-card:hover { background: var(--solid-card-bg); border-color: transparent; box-shadow: var(--card-shadow-hover); transform: translateY(-6px); }
+        .service-icon-box { width: 55px; height: 55px; color: var(--accent); margin-bottom: 1.5rem; background: var(--icon-bg); border-radius: 16px; display: flex; align-items: center; justify-content: center; padding: 12px; }
+        .alt-bento-section { background: var(--alt-bento-bg); border-radius: 40px; padding: 6rem 4rem; margin: 2rem 0; }
+        .solid-card { background: var(--solid-card-bg); border-radius: 24px; padding: 2.5rem; border: none; box-shadow: var(--card-shadow); transition: all 0.4s ease; display: flex; flex-direction: column; height: 100%; }
+        .solid-card:hover { transform: translateY(-8px); box-shadow: var(--card-shadow-hover); }
+        .glass-pill { padding: 8px 20px; border-radius: 100px; background: var(--pill-bg); color: var(--pill-text); font-size: 0.8rem; font-weight: 700; transition: all 0.5s ease; z-index: 10;}
+
+        @media (max-width: 900px) {
+          .home-wrapper { padding: 90px 16px 24px 16px; }
+          .hero-bento-box { flex-direction: column; }
+          .hero-content { padding: 3rem 2rem 1rem 2rem; text-align: center; align-items: center; }
+          .tech-stack-container { min-height: 400px; }
+          .alt-bento-section { padding: 4rem 2rem; border-radius: 30px; }
+        }
       `}</style>
 
-      {/* ── මෙතනින් තමයි THEME එකට අදාළව BACKGROUND එක මාරු කරන්නේ ── */}
-      {isDark ? <DarkGlassBackground mousePos={mousePos} /> : <LightGlassBackground mousePos={mousePos} />}
+      <div className="inner-window">
 
-      {/* ── HERO SECTION ── */}
-      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', padding: '0 5%', maxWidth: 1100 }}>
-          
-          <div className="glass-pill" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: '2.5rem', opacity: 0, animation: 'revealUp 0.8s ease forwards 0.2s' }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 10px var(--accent)' }}></span>
-            <span className="premium-text" style={{ textTransform: 'uppercase', letterSpacing: '2px' }}>Next-Gen Tech Partners</span>
-          </div>
+        {/* ─── HERO SECTION ─── */}
+        <div className="hero-bento-box">
+          <div className="floating-shape-1"></div>
+          <div className="floating-shape-2"></div>
 
-          <h1 className="premium-text" style={{ 
-            fontSize: 'clamp(3.5rem, 8vw, 6.5rem)', 
-            fontWeight: 800, 
-            lineHeight: 1.1,
-            color: 'var(--text-main)',
-            margin: '0 0 1.5rem 0',
-            letterSpacing: '-2px',
-            opacity: 0, animation: 'revealUp 0.8s ease forwards 0.4s'
-          }}>
-            Grow your business <br/>
-            with <span className="accent-color">Gen O.</span>
-          </h1>
-
-          <p className="premium-text" style={{ 
-            fontSize: 'clamp(1.1rem, 2vw, 1.3rem)', 
-            color: 'var(--text-muted)', 
-            maxWidth: 650, 
-            margin: '0 auto 3rem', 
-            lineHeight: 1.6,
-            fontWeight: 400,
-            opacity: 0, animation: 'revealUp 0.8s ease forwards 0.6s'
-          }}>
-            We engineer high-performance web, mobile, and AI solutions. 
-            Move your mouse to reveal the core intelligence powering our infrastructure.
-          </p>
-
-          <div style={{ display: 'flex', gap: 20, justifyContent: 'center', opacity: 0, animation: 'revealUp 0.8s ease forwards 0.8s' }}>
-            <Link to="/projects" className="btn-magnetic premium-text">
-              Explore Work
-            </Link>
-            <Link to="/contact" className="btn-magnetic btn-outline premium-text">
-              Contact Us
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── STATS CARDS ── */}
-      <section style={{ padding: '2rem 5%', position: 'relative', zIndex: 2 }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
-          {siteData.stats.map((s, i) => (
-            <div key={i} className="glass-card reveal" style={{ animationDelay: `${i * 0.1}s`, padding: '2rem', textAlign: 'center' }}>
-              <div className="premium-text" style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-1px' }}>{s.num}</div>
-              <div className="premium-text" style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)', marginTop: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── PROJECTS GRID ── */}
-      <section style={{ padding: '8rem 5%', position: 'relative', zIndex: 2 }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div className="reveal" style={{ marginBottom: '4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}>
-            <div>
-              <h2 className="premium-text" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-1px', margin: 0 }}>Selected Work.</h2>
-              <p className="premium-text" style={{ fontSize: '1.1rem', color: 'var(--text-muted)', margin: '10px 0 0 0' }}>Digital transformations that matter.</p>
+          <div className="hero-content">
+            <h1 className="serif-heading" style={{ fontSize: 'clamp(3.2rem, 5vw, 4.5rem)', fontWeight: 800, lineHeight: 1.1, marginBottom: '10px', letterSpacing: '-1px' }}>
+              Hello, I'm <span style={{ color: 'var(--accent)' }}>Tharindu</span>
+            </h1>
+            <h2 className="serif-heading" style={{ fontSize: 'clamp(2.4rem, 4vw, 3.2rem)', fontWeight: 700, color: 'var(--accent)', marginBottom: '1.5rem', letterSpacing: '-1px' }}>
+              Web Developer
+            </h2>
+            <p className="premium-text" style={{ fontSize: '1.1rem', lineHeight: 1.7, marginBottom: '2.5rem', maxWidth: '480px' }}>
+              I am a Full-Stack Web Developer with extensive experience of over 4 years. My expertise is in creating & designing websites, Mobile Apps, and Desktop Applications.
+            </p>
+            
+            <div className="btn-group">
+              <Link to="/about" className="btn-new-outline">Learn More</Link>
+              <Link to="/contact" className="btn-new-primary">Contact Us</Link>
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
-            {featuredProjects.map((p, i) => (
-              <div key={p.id} className="glass-card reveal" style={{ minHeight: '400px', animationDelay: `${i * 0.1}s` }}>
-                <div className="glass-card-content">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                    <span className="glass-pill" style={{ color: p.color, border: `1px solid ${p.color}40`, background: isDark ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.9)' }}>
-                      {p.category}
-                    </span>
-                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: p.color, opacity: 0.15 }}></div>
-                  </div>
-                  <h3 className="premium-text" style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-main)', margin: '0 0 1rem 0' }}>{p.title}</h3>
-                  <p className="premium-text" style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.6, marginBottom: '2rem' }}>
-                    {p.desc}
-                  </p>
-                  <div style={{ marginTop: 'auto', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    {p.tags.slice(0, 3).map(t => (
-                      <span key={t} style={{ fontSize: '0.8rem', fontWeight: 600, padding: '6px 14px', background: isDark ? 'rgba(255,255,255,0.05)' : '#f1f5f9', borderRadius: '100px', color: isDark ? '#cbd5e1' : '#475569', transition: 'all 0.5s ease' }}>{t}</span>
-                    ))}
-                  </div>
-                </div>
+          {/* ─── HUGE 3D LOGO ANIMATION ─── */}
+          <div className="tech-stack-container">
+            {techStack.map((tech) => (
+              <div 
+                key={tech.name} 
+                className="tech-logo-item"
+                style={{ 
+                  top: tech.style.top,
+                  bottom: tech.style.bottom,
+                  left: tech.style.left,
+                  right: tech.style.right,
+                  animation: tech.style.animation
+                }}
+                title={tech.name}
+              >
+                {/* ── Original Logos taking 100% size ── */}
+                <img src={tech.icon} alt={tech.name} className="tech-icon-img" />
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* ── SERVICES ── */}
-      <section style={{ padding: '6rem 5%', position: 'relative', zIndex: 2 }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <h2 className="reveal premium-text" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 800, color: 'var(--text-main)', marginBottom: '4rem', textAlign: 'center' }}>
-            Capabilities.
+        </div>
+
+        {/* ─── STATS SECTION ─── */}
+        <section className="plain-section">
+          <div className="reveal" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
+            {siteData.stats.map((s, i) => (
+              <div key={i} className="stat-item">
+                <div className="serif-heading stat-num">{s.num}</div>
+                <div className="premium-text" style={{ fontSize: '0.9rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ─── CAPABILITIES ─── */}
+        <section className="plain-section" style={{ paddingTop: '0' }}>
+          <h2 className="reveal serif-heading" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 800, marginBottom: '3rem', textAlign: 'center' }}>
+            Our Capabilities
           </h2>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
             {siteData.services.map((s, i) => (
-              <div key={s.id} className="glass-card reveal" style={{ animationDelay: `${i * 0.1}s` }}>
-                <div className="glass-card-content" style={{ padding: '2rem' }}>
-                  <div className="service-icon-box">
-                    {icons[s.icon]}
-                  </div>
-                  <h3 className="premium-text" style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 0.75rem 0' }}>{s.title}</h3>
-                  <p className="premium-text" style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0 }}>
-                    {s.desc}
-                  </p>
+              <div key={s.id} className="clean-card reveal" style={{ animationDelay: `${i * 0.1}s` }}>
+                <div className="service-icon-box">
+                  {icons[s.icon]}
+                </div>
+                <h3 className="serif-heading" style={{ fontSize: '1.4rem', fontWeight: 700, margin: '0 0 1rem 0' }}>{s.title}</h3>
+                <p className="premium-text" style={{ fontSize: '1rem', lineHeight: 1.6, margin: 0 }}>
+                  {s.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ─── SELECTED WORK ─── */}
+        <div className="alt-bento-section">
+          <div className="reveal" style={{ marginBottom: '4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}>
+            <div>
+              <h2 className="serif-heading" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 800, letterSpacing: '-1px', margin: 0 }}>Selected Work.</h2>
+              <p className="premium-text" style={{ fontSize: '1.1rem', margin: '10px 0 0 0' }}>Digital transformations that matter.</p>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem' }}>
+            {featuredProjects.map((p, i) => (
+              <div key={p.id} className="solid-card reveal" style={{ animationDelay: `${i * 0.1}s` }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                  <span className="glass-pill">
+                    {p.category}
+                  </span>
+                  <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--icon-bg)' }}></div>
+                </div>
+                <h3 className="serif-heading" style={{ fontSize: '1.8rem', fontWeight: 800, margin: '0 0 1rem 0' }}>{p.title}</h3>
+                <p className="premium-text" style={{ fontSize: '1rem', lineHeight: 1.6, margin: '0 0 2rem 0', flexGrow: 1 }}>
+                  {p.desc}
+                </p>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {p.tags.slice(0, 3).map(t => (
+                    <span key={t} className="premium-text" style={{ fontSize: '0.8rem', fontWeight: 600, padding: '6px 14px', border: '1px solid var(--card-border)', borderRadius: '100px' }}>{t}</span>
+                  ))}
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* ── BOLD CTA ── */}
-      <section style={{ padding: '8rem 5%', textAlign: 'center', position: 'relative', zIndex: 2 }}>
-        <div className="glass-card reveal" style={{ maxWidth: 900, margin: '0 auto', padding: '5rem 2rem', background: 'var(--cta-bg)' }}>
-          <h2 className="premium-text" style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-1.5px', marginBottom: '1.5rem', lineHeight: 1.1 }}>
-            Ready to build <br/> something amazing?
-          </h2>
-          <p className="premium-text" style={{ color: 'var(--text-muted)', fontSize: '1.15rem', marginBottom: '3rem', maxWidth: 500, margin: '0 auto 3rem' }}>
-            Let's engineer your next big idea with smart digital solutions.
-          </p>
-          <Link to="/contact" className="btn-magnetic premium-text" style={{ background: 'var(--accent)', color: isDark ? '#000000' : '#ffffff', padding: '18px 44px', fontSize: '1.1rem' }}>
-            Start the Conversation
-          </Link>
-        </div>
-      </section>
-
+      </div>
     </div>
   );
 }
