@@ -11,57 +11,6 @@
 }
 
 [data-theme="dark"] {
-<<<<<<< HEAD
-  --bg:         #04060B;
-  --bg2:        #080B12;
-  --bg3:        #0C1019;
-  --surface:    #0F1520;
-  --surface2:   #141C2C;
-  --border:     rgba(0,210,255,0.08);
-  --border2:    rgba(0,210,255,0.22);
-  --accent:     #00D2FF;
-  --accent2:    #0099CC;
-  --accent-dim: rgba(0,210,255,0.14);
-  --glow:       rgba(0,210,255,0.18);
-  --glow2:      rgba(0,210,255,0.07);
-  --grid:       rgba(0,210,255,0.03);
-  --text:       #E4EDF8;
-  --text2:      #6E8DA8;
-  --text3:      #354C62;
-  --card:       rgba(12,19,32,0.88);
-  --nav-bg:     rgba(4,6,11,0.9);
-  --shadow:     0 32px 80px rgba(0,0,0,0.6);
-  --logo-dark:  #3a4755;
-  --green:      #00E896;
-  --orange:     #FF8C42;
-  --purple:     #A78BFA;
-}
-
-[data-theme="light"] {
-  --bg:         #EEF2F7;
-  --bg2:        #F6F9FC;
-  --bg3:        #E2EAF2;
-  --surface:    #FFFFFF;
-  --surface2:   #F0F5FB;
-  --border:     rgba(0,130,170,0.12);
-  --border2:    rgba(0,130,170,0.28);
-  --accent:     #007BA8;
-  --accent2:    #005C80;
-  --accent-dim: rgba(0,123,168,0.1);
-  --glow:       rgba(0,123,168,0.1);
-  --glow2:      rgba(0,123,168,0.04);
-  --grid:       rgba(0,123,168,0.04);
-  --text:       #090E18;
-  --text2:      #3A5572;
-  --text3:      #7A9BB8;
-  --card:       rgba(255,255,255,0.95);
-  --nav-bg:     rgba(238,242,247,0.94);
-  --shadow:     0 24px 60px rgba(0,0,0,0.08);
-  --logo-dark:  #3a4755;
-  --green:      #00A86B;
-  --orange:     #E07020;
-  --purple:     #7C5FBF;
-=======
   --bg:         #07090D;
   --bg2:        #0B0E14;
   --bg3:        #0F1319;
@@ -107,7 +56,6 @@
   --nav-bg:     rgba(239, 243, 248, 0.93);
   --shadow:     0 24px 80px rgba(0,0,0,0.1);
   --logo-dark: #3a4755;
->>>>>>> origin/linuka_dev
 }
 
 /* ─────────────────────────── RESET ─────────────────────────── */
@@ -129,14 +77,6 @@ body {
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 99px; }
 
-<<<<<<< HEAD
-/* Grid background */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-
-  background-size: 54px 54px;
-=======
 /* ───────────────────────── PREMIUM AURORA & ADVANCED MESH ───────────────────────── */
 
 /* 1. Floating Ambient Glow (Aurora Effect) */
@@ -150,16 +90,12 @@ body::before {
     radial-gradient(circle at 50% 50%, var(--accent-dim), transparent 45%),
     radial-gradient(circle at 70% 30%, rgba(0, 200, 255, 0.12), transparent 50%),
     radial-gradient(circle at 30% 70%, rgba(0, 144, 187, 0.12), transparent 50%);
->>>>>>> origin/linuka_dev
   pointer-events: none;
   z-index: 0;
   animation: auroraRotate 25s linear infinite;
   transition: background var(--transition);
 }
 
-<<<<<<< HEAD
-/* ─────────────────────────── CURSOR ─────────────────────────── */
-=======
 /* 2. Advanced Tech Mesh (Interlocking Carbon Waves replacing the old dots) */
 body::after {
   content: '';
@@ -196,7 +132,6 @@ body::after {
 }
 
 /* ───────────────────────── CUSTOM CURSOR ───────────────────────── */
->>>>>>> origin/linuka_dev
 .cursor-dot {
   position: fixed;
   width: 8px; height: 8px;
@@ -571,14 +506,6 @@ section {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-<<<<<<< HEAD
-/* ─────────────────────────── TYPEWRITER ─────────────────────────── */
-.typewriter {
-  overflow: hidden;
-  white-space: nowrap;
-  border-right: 2px solid var(--accent);
-  animation: typing 3.5s steps(40, end), blink-cursor 0.75s step-end infinite;
-=======
 /* ───────────────────────── MODAL ───────────────────────── */
 .modal-overlay {
   position: fixed;
@@ -601,7 +528,6 @@ section {
   overflow-y: auto;
   position: relative;
   animation: fadeUp 0.3s ease;
->>>>>>> origin/linuka_dev
 }
 @keyframes typing { from { width: 0; } to { width: 100%; } }
 @keyframes blink-cursor { 0%, 100% { border-color: var(--accent); } 50% { border-color: transparent; } }
