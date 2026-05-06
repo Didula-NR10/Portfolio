@@ -106,7 +106,11 @@ function AppInner() {
       <main>
         <PageWrapper>
           <Routes>
+<<<<<<< HEAD
             <Route path="/"         element={<Home />} />
+=======
+            <Route path="/"        element={<Home />} />
+>>>>>>> origin/linuka_dev
             <Route path="/projects" element={<Projects />} />
             <Route path="/services" element={<Services />} />
             <Route path="/about"    element={<About />} />
@@ -114,7 +118,12 @@ function AppInner() {
           </Routes>
         </PageWrapper>
       </main>
+<<<<<<< HEAD
       <Footer />
+=======
+      {/* Theme prop passed to Footer here */}
+      <Footer theme={theme} />
+>>>>>>> origin/linuka_dev
       <ScrollReset />
     </>
   );
