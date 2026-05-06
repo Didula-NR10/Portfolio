@@ -10,48 +10,50 @@
 }
 
 [data-theme="dark"] {
-  --bg:        #07090D;
-  --bg2:       #0B0E14;
-  --bg3:       #0F1319;
-  --surface:   #111720;
-  --surface2:  #171E2A;
-  --border:    rgba(0, 200, 255, 0.09);
-  --border2:   rgba(0, 200, 255, 0.22);
-  --accent:    #00C8FF;
-  --accent2:   #0090BB;
+  --bg:         #07090D;
+  --bg2:        #0B0E14;
+  --bg3:        #0F1319;
+  --surface:    #111720;
+  --surface2:   #171E2A;
+  --border:     rgba(0, 200, 255, 0.09);
+  --border2:    rgba(0, 200, 255, 0.22);
+  --accent:     #00C8FF;
+  --accent2:    #0090BB;
   --accent-dim:#00C8FF22;
-  --glow:      rgba(0, 200, 255, 0.18);
-  --glow2:     rgba(0, 200, 255, 0.07);
-  --grid:      rgba(0, 200, 255, 0.035);
-  --text:      #E6EDF7;
-  --text2:     #7A94B0;
-  --text3:     #3D566E;
-  --card:      rgba(15, 22, 35, 0.85);
-  --nav-bg:    rgba(7, 9, 13, 0.88);
-  --shadow:    0 24px 80px rgba(0,0,0,0.5);
+  --glow:       rgba(0, 200, 255, 0.18);
+  --glow2:      rgba(0, 200, 255, 0.07);
+  --grid:       rgba(0, 200, 255, 0.035);
+  --text:       #E6EDF7;
+  --text2:      #7A94B0;
+  --text3:      #3D566E;
+  --card:       rgba(15, 22, 35, 0.85);
+  --nav-bg:     rgba(7, 9, 13, 0.88);
+  --shadow:     0 24px 80px rgba(0,0,0,0.5);
   --logo-dark: #3a4755;
 }
 
 [data-theme="light"] {
-  --bg:        #dfe7f1;
-  --bg2:       #F8FAFC;
-  --bg3:       rgb(186, 204, 225);
-  --surface:   #FFFFFF;
-  --surface2:  #F2F6FB;
-  --border:    rgba(0, 144, 187, 0.13);
-  --border2:   rgba(0, 144, 187, 0.28);
-  --accent:    #0090BB;
-  --accent2:   #006A8E;
-  --accent-dim:#0090BB18;
-  --glow:      rgba(0, 144, 187, 0.1);
-  --glow2:     rgba(0, 144, 187, 0.04);
-  --grid:      rgba(0, 144, 187, 0.045);
-  --text:      #0D1117;
-  --text2:     #4A6180;
-  --text3:     #8BA0B8;
-  --card:      rgba(255, 255, 255, 0.92);
-  --nav-bg:    rgba(239, 243, 248, 0.93);
-  --shadow:    0 24px 80px rgba(0,0,0,0.1);
+  /* Darkened the main background slightly to make the blue stand out */
+  --bg:         #e2e8f0; 
+  --bg2:        #F8FAFC;
+  --bg3:        rgb(186, 204, 225);
+  --surface:    #FFFFFF;
+  --surface2:   #F2F6FB;
+  --border:     rgba(0, 144, 187, 0.13);
+  --border2:    rgba(0, 144, 187, 0.28);
+  --accent:     #0090BB;
+  --accent2:    #006A8E;
+  /* Increased opacity of accent-dim to intensify the Aurora Glow */
+  --accent-dim:#0090BB33; 
+  --glow:       rgba(0, 144, 187, 0.1);
+  --glow2:      rgba(0, 144, 187, 0.04);
+  --grid:       rgba(0, 144, 187, 0.045);
+  --text:       #0D1117;
+  --text2:      #4A6180;
+  --text3:      #8BA0B8;
+  --card:       rgba(255, 255, 255, 0.92);
+  --nav-bg:     rgba(239, 243, 248, 0.93);
+  --shadow:     0 24px 80px rgba(0,0,0,0.1);
   --logo-dark: #3a4755;
 }
 
@@ -76,7 +78,7 @@ body {
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 99px; }
 
-/* ───────────────────────── PREMIUM AURORA & MESH BACKDROP ───────────────────────── */
+/* ───────────────────────── PREMIUM AURORA & ADVANCED MESH ───────────────────────── */
 
 /* 1. Floating Ambient Glow (Aurora Effect) */
 body::before {
@@ -84,31 +86,38 @@ body::before {
   position: fixed;
   top: -50%; left: -50%;
   width: 200%; height: 200%;
+  /* Increased opacity (0.05 -> 0.12) to highlight the blue glow */
   background:
     radial-gradient(circle at 50% 50%, var(--accent-dim), transparent 45%),
-    radial-gradient(circle at 70% 30%, rgba(0, 200, 255, 0.05), transparent 50%),
-    radial-gradient(circle at 30% 70%, rgba(0, 144, 187, 0.05), transparent 50%);
+    radial-gradient(circle at 70% 30%, rgba(0, 200, 255, 0.12), transparent 50%),
+    radial-gradient(circle at 30% 70%, rgba(0, 144, 187, 0.12), transparent 50%);
   pointer-events: none;
   z-index: 0;
   animation: auroraRotate 25s linear infinite;
   transition: background var(--transition);
 }
 
-/* 2. Micro-Dot Matrix with Vignette (Breathing Effect) */
+/* 2. Advanced Tech Mesh (Interlocking Carbon Waves replacing the old dots) */
 body::after {
   content: '';
   position: fixed;
-  inset: 0;
-  /* සියුම් තිත් රටාව */
-  background-image: radial-gradient(var(--accent) 1px, transparent 1.5px);
-  background-size: 35px 35px;
-  opacity: 0.15;
+  /* Extending slightly beyond the screen to hide animation edges */
+  inset: -10%; 
+  width: 120%;
+  height: 120%;
+  /* Complex interlocking wave pattern using overlapping radial gradients */
+  background-image:
+    radial-gradient(circle at 100% 50%, transparent 20%, var(--accent-dim) 21%, var(--accent-dim) 34%, transparent 35%, transparent),
+    radial-gradient(circle at 0% 50%, transparent 20%, var(--accent-dim) 21%, var(--accent-dim) 34%, transparent 35%, transparent);
+  background-size: 60px 60px;
+  background-position: 0 0, 30px 30px;
+  opacity: 0.6;
   pointer-events: none;
   z-index: 0;
-  /* අයිනට යද්දී ලස්සනට බොඳ වෙලා යන්න Mask එකක් */
-  -webkit-mask-image: radial-gradient(ellipse at center, black 10%, transparent 85%);
-  mask-image: radial-gradient(ellipse at center, black 10%, transparent 85%);
-  animation: meshBreathe 8s ease-in-out infinite alternate;
+  /* Mask to create a smooth fade-out effect towards the edges */
+  -webkit-mask-image: radial-gradient(ellipse at center, black 10%, transparent 70%);
+  mask-image: radial-gradient(ellipse at center, black 10%, transparent 70%);
+  animation: wavePulse 15s ease-in-out infinite alternate;
 }
 
 /* ── Backdrop Animations ── */
@@ -118,9 +127,9 @@ body::after {
   100% { transform: rotate(360deg) scale(1); }
 }
 
-@keyframes meshBreathe {
-  0% { opacity: 0.08; transform: scale(1); }
-  100% { opacity: 0.2; transform: scale(1.03); }
+@keyframes wavePulse {
+  0% { opacity: 0.3; transform: scale(1) translate(0, 0); }
+  100% { opacity: 0.8; transform: scale(1.05) translate(-10px, -10px); }
 }
 
 /* ───────────────────────── CUSTOM CURSOR ───────────────────────── */
@@ -485,7 +494,7 @@ section {
   position: fixed;
   inset: 0;
   background: rgba(7, 9, 13, 0.85);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(66px);
   z-index: 1000;
   display: flex;
   align-items: center;

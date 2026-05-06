@@ -3,28 +3,41 @@ import { Link } from 'react-router-dom';
 import { siteData } from '../data';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
-// ── SELECTED TECH STACK WITH ORIGINAL LOGOS ──
+// ── 3D STACKED BOXES DATA (PERFECT TIGHT PYRAMID) ──
+// මෙහි x, y, z අගයන් ඉතා නිවැරදිව සකසා ඇත. පෙට්ටි අතර පරතරය 4px පමණි.
 const techStack = [
+  // Top Box (Tier 1)
   { 
     name: 'React.js', 
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg', 
-    // Spaced out nicely to fill the empty area
-    style: { top: '5%', left: '10%', animation: 'float1 8s ease-in-out infinite' } 
+    x: 0, y: -115, z: 0, s: 1, zIndex: 10 
   },
+  // Middle Row (Tier 2)
   { 
     name: 'Node.js', 
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg', 
-    style: { top: '25%', right: '5%', animation: 'float2 10s ease-in-out infinite reverse' } 
+    x: -52, y: -10, z: 0, s: 1, zIndex: 9 
   },
   { 
     name: 'Python', 
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg', 
-    style: { bottom: '15%', left: '20%', animation: 'float3 9s ease-in-out infinite' } 
+    x: 52, y: -10, z: 0, s: 1, zIndex: 9 
+  },
+  // Bottom Row (Tier 3)
+  { 
+    name: 'JavaScript', 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg', 
+    x: -104, y: 95, z: 0, s: 1, zIndex: 8 
   },
   { 
     name: 'AWS', 
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg', 
-    style: { bottom: '30%', right: '15%', animation: 'float4 11s ease-in-out infinite reverse' } 
+    x: 0, y: 95, z: 0, s: 1, zIndex: 8 
+  },
+  { 
+    name: 'MySQL', 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg', 
+    x: 104, y: 95, z: 0, s: 1, zIndex: 8 
   },
 ];
 
@@ -65,6 +78,7 @@ export default function Home() {
     <div className={`home-wrapper ${isDark ? 'dark-mode' : 'light-mode'}`} ref={sectRef}>
       
       <style>{`
+        /* ── Oringinal Global Background ── */
         body, html, #root {
           background-image: none !important;
           background-color: var(--page-bg) !important;
@@ -87,6 +101,7 @@ export default function Home() {
           flex-direction: column;
         }
 
+        /* ── EXACT Original Light Mode Variables ── */
         .light-mode {
           --page-bg: #ffffff; 
           --hero-bento-bg: linear-gradient(135deg, #e4f1f0 0%, #d5e9e9 100%);
@@ -112,8 +127,15 @@ export default function Home() {
           --pill-bg: #e4f1f0;
           --pill-text: #15797b;
           --icon-bg: rgba(21, 121, 123, 0.08);
+
+          /* 3D Box Colors - Light */
+          --cube-front: #ffffff;
+          --cube-top: #f5f5f5;
+          --cube-side: #fafafa;
+          --cube-border: rgba(0, 0, 0, 0.05);
         }
 
+        /* ── EXACT Original Dark Mode Variables ── */
         .dark-mode {
           --page-bg: #070b0f; 
           --hero-bento-bg: linear-gradient(135deg, #0e171b 0%, #152229 100%);
@@ -139,11 +161,18 @@ export default function Home() {
           --pill-bg: rgba(74, 214, 232, 0.1);
           --pill-text: #4ad6e8;
           --icon-bg: rgba(74, 214, 232, 0.1);
+
+          /* 3D Box Colors - Dark Mode FIX */
+          --cube-front: #232d3b;  /* Beautiful Slate Grey */
+          --cube-top: #303d4f;
+          --cube-side: #161e27;
+          --cube-border: rgba(255, 255, 255, 0.12);
         }
 
         .premium-text { font-family: 'Inter', -apple-system, sans-serif; transition: color 0.5s ease; color: var(--text-muted); }
         .serif-heading { font-family: 'Playfair Display', 'Merriweather', serif; transition: color 0.5s ease; color: var(--text-main); }
 
+        /* EXACT Original non-glass Bento Box */
         .hero-bento-box {
           background: var(--hero-bento-bg);
           border-radius: 40px;
@@ -167,63 +196,105 @@ export default function Home() {
         }
 
         /* ────────────────────────────────────────── */
-        /* ── HUGE 3D TECH LOGOS NO BACKGROUND ── */
+        /* ── 3D PHYSICAL PYRAMID CUBES CSS ── */
         /* ────────────────────────────────────────── */
         .tech-stack-container {
           flex: 1; 
           position: relative;
           z-index: 2;
-        }
-
-        .tech-logo-item {
-          position: absolute; 
           display: flex;
-          align-items: center;
           justify-content: center;
-          /* ගොඩක් ලොකු සයිස් එකක් දුන්නා Space එක පිරෙන්න */
-          width: clamp(100px, 12vw, 180px);  
-          height: clamp(100px, 12vw, 180px); 
-          /* කිසිම Background එකක් නෑ, Border නෑ */
-          background: transparent; 
-          border: none;
-          cursor: pointer;
+          align-items: center;
+          /* Critical for receding depth */
+          perspective: 2000px; 
+        }
+
+        .pyramid-container {
+          position: relative;
+          transform-style: preserve-3d;
+          /* Rotate to show Top and Right sides */
+          transform: rotateX(-15deg) rotateY(25deg); 
+        }
+
+        .position-wrapper {
+          position: absolute;
+          width: 100px;
+          height: 100px;
+          margin-top: -50px;
+          margin-left: -50px;
+          transform-style: preserve-3d;
           transition: transform 0.3s ease;
-          /* Logo එකටම ලස්සන 3D Shadow එකක් දාලා තියෙනවා පාවෙනවා වගේ පේන්න */
-          filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15));
+          cursor: pointer;
         }
 
-        .tech-logo-item:hover {
-          transform: scale(1.15) !important; /* Hover කරද්දී තවත් ලොකු වෙනවා */
-        }
-
-        .dark-mode .tech-logo-item {
-          filter: drop-shadow(0 15px 25px rgba(0,0,0,0.5));
-        }
-
-        .tech-icon-img {
-          /* Image එක මුළු Size එකම ගන්න හැදුවා */
-          width: 100%; 
+        .hover-wrapper {
+          width: 100%;
           height: 100%;
+          transform-style: preserve-3d;
+          transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .position-wrapper:hover {
+          z-index: 999 !important;
+        }
+
+        /* On hover, pop out of the stack */
+        .position-wrapper:hover .hover-wrapper {
+          transform: translateZ(50px) scale(1.15);
+        }
+
+        .cube {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          transform-style: preserve-3d;
+        }
+
+        .cube-face {
+          position: absolute;
+          width: 100px;
+          height: 100px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          box-sizing: border-box;
+          background: #ffffff;
+          border: 1px solid var(--cube-border);
+          border-radius: 2px;
+        }
+
+        .cube-front {
+          transform: rotateY(0deg) translateZ(50px);
+          background: var(--cube-front);
+          box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+        }
+
+        .dark-mode .cube-front {
+          box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+        
+        /* Soft white glow so dark logos (AWS, JS) are visible in Dark Mode */
+        .dark-mode .cube-front img {
+          filter: drop-shadow(0px 0px 5px rgba(255,255,255,0.3));
+        }
+
+        .cube-front img {
+          max-width: 60%;
+          max-height: 60%;
           object-fit: contain;
         }
 
-        /* 4 Different Floating Animations */
-        @keyframes float1 {
-          0%, 100% { transform: translate(0, 0); }
-          50% { transform: translate(20px, -25px); }
+        .cube-top { transform: rotateX(90deg) translateZ(50px); background: var(--cube-top); }
+        .cube-right { transform: rotateY(90deg) translateZ(50px); background: var(--cube-side); }
+        .cube-left { transform: rotateY(-90deg) translateZ(50px); background: var(--cube-side); }
+        .cube-back { transform: rotateY(180deg) translateZ(50px); background: var(--cube-front); }
+        
+        .cube-bottom { 
+          transform: rotateX(-90deg) translateZ(50px); 
+          background: var(--cube-top); 
+          box-shadow: 0 20px 30px rgba(0,0,0,0.15); 
         }
-        @keyframes float2 {
-          0%, 100% { transform: translate(0, 0); }
-          50% { transform: translate(-25px, 20px); }
-        }
-        @keyframes float3 {
-          0%, 100% { transform: translate(0, 0); }
-          50% { transform: translate(30px, 15px); }
-        }
-        @keyframes float4 {
-          0%, 100% { transform: translate(0, 0); }
-          50% { transform: translate(-20px, -30px); }
-        }
+        .dark-mode .cube-bottom { box-shadow: 0 20px 30px rgba(0,0,0,0.6); }
 
         /* ── Floating Abstract Shapes ── */
         .floating-shape-1 { position: absolute; width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--accent); opacity: 0.3; top: 15%; left: 10%; animation: float 6s ease-in-out infinite; }
@@ -239,14 +310,19 @@ export default function Home() {
         .btn-new-outline { padding: 12px 32px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; transition: all 0.3s ease; background-color: var(--btn-outline-bg); color: var(--accent); border: 2px solid var(--btn-outline-border); }
         .btn-new-outline:hover { background-color: var(--btn-outline-hover); transform: translateY(-2px); }
 
-        /* ── SECTIONS ── */
+        /* ── EXACT ORIGINAL SECTIONS ── */
         .plain-section { padding: 4rem 2rem; background: transparent; }
         .stat-item { text-align: center; padding: 1rem; }
         .stat-num { font-size: 3.5rem; font-weight: 800; color: var(--accent); line-height: 1.1; margin-bottom: 0.5rem; }
+        
         .clean-card { background: transparent; border: 1px solid var(--card-border); border-radius: 24px; padding: 2.5rem; transition: all 0.4s ease; display: flex; flex-direction: column; align-items: flex-start; }
         .clean-card:hover { background: var(--solid-card-bg); border-color: transparent; box-shadow: var(--card-shadow-hover); transform: translateY(-6px); }
         .service-icon-box { width: 55px; height: 55px; color: var(--accent); margin-bottom: 1.5rem; background: var(--icon-bg); border-radius: 16px; display: flex; align-items: center; justify-content: center; padding: 12px; }
-        .alt-bento-section { background: var(--alt-bento-bg); border-radius: 40px; padding: 6rem 4rem; margin: 2rem 0; }
+        
+        /* EXACT Original Alt Bento Section */
+        .alt-bento-section { background: var(--alt-bento-bg); border-radius: 72px; padding: 48px; margin: 2rem 0; }
+        
+        /* EXACT Original Solid Card */
         .solid-card { background: var(--solid-card-bg); border-radius: 24px; padding: 2.5rem; border: none; box-shadow: var(--card-shadow); transition: all 0.4s ease; display: flex; flex-direction: column; height: 100%; }
         .solid-card:hover { transform: translateY(-8px); box-shadow: var(--card-shadow-hover); }
         .glass-pill { padding: 8px 20px; border-radius: 100px; background: var(--pill-bg); color: var(--pill-text); font-size: 0.8rem; font-weight: 700; transition: all 0.5s ease; z-index: 10;}
@@ -255,8 +331,11 @@ export default function Home() {
           .home-wrapper { padding: 90px 16px 24px 16px; }
           .hero-bento-box { flex-direction: column; }
           .hero-content { padding: 3rem 2rem 1rem 2rem; text-align: center; align-items: center; }
+          
+          .pyramid-container { transform: rotateX(-15deg) rotateY(25deg) scale(0.8); }
           .tech-stack-container { min-height: 400px; }
-          .alt-bento-section { padding: 4rem 2rem; border-radius: 30px; }
+          
+          .alt-bento-section { padding: 32px; border-radius: 56px; }
         }
       `}</style>
 
@@ -284,25 +363,36 @@ export default function Home() {
             </div>
           </div>
 
-          {/* ─── HUGE 3D LOGO ANIMATION ─── */}
+          {/* ─── PHYSICAL 3D CUBES (PYRAMID STACK) ─── */}
           <div className="tech-stack-container">
-            {techStack.map((tech) => (
-              <div 
-                key={tech.name} 
-                className="tech-logo-item"
-                style={{ 
-                  top: tech.style.top,
-                  bottom: tech.style.bottom,
-                  left: tech.style.left,
-                  right: tech.style.right,
-                  animation: tech.style.animation
-                }}
-                title={tech.name}
-              >
-                {/* ── Original Logos taking 100% size ── */}
-                <img src={tech.icon} alt={tech.name} className="tech-icon-img" />
-              </div>
-            ))}
+            <div className="pyramid-container">
+              {techStack.map((tech) => (
+                <div
+                  key={tech.name}
+                  className="position-wrapper"
+                  title={tech.name}
+                  style={{
+                    transform: `translate3d(${tech.x}px, ${tech.y}px, ${tech.z}px) scale(${tech.s})`,
+                    zIndex: tech.zIndex, 
+                  }}
+                >
+                  <div className="hover-wrapper">
+                    <div className="cube">
+                      {/* Front Face with Logo */}
+                      <div className="cube-face cube-front">
+                        <img src={tech.icon} alt={tech.name} className="tech-icon-img" />
+                      </div>
+                      {/* Other Faces */}
+                      <div className="cube-face cube-back"></div>
+                      <div className="cube-face cube-right"></div>
+                      <div className="cube-face cube-left"></div>
+                      <div className="cube-face cube-top"></div>
+                      <div className="cube-face cube-bottom"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
         </div>
