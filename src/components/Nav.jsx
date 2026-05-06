@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { siteData } from '../data';
 
-// ─── Electric Gen O Logo (Navbar Version) ────────────────────────
+// ─── Electric Gen O Logo (Outer circle removed & Sized perfectly) ──
 const GenoLogo = () => (
-  <div className="nav-electric-logo" style={{ display: 'flex', alignItems: 'center', gap: '1px' }}>
+  <div className="nav-electric-logo" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
     <span className="nav-electric-text" style={{
       fontFamily: "var(--font-display, 'Syne', sans-serif)",
       fontSize: '28px',
@@ -15,8 +15,8 @@ const GenoLogo = () => (
     }}>
       GEN
     </span>
-    <svg className="nav-electric-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginTop: '-4px', overflow: 'visible' }}>
-      <circle cx="12" cy="12" r="10" stroke="var(--accent)" strokeWidth="2.5" fill="none" />
+    {/* SVG Width and Height increased to 28 to match the 28px font size exactly */}
+    <svg className="nav-electric-svg" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginTop: '-4px', overflow: 'visible' }}>
       <path d="M12 4 L12 10" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" />
       <path d="M7 7.5 A7.5 7.5 0 1 0 17 7.5" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" fill="none" />
     </svg>
@@ -135,6 +135,7 @@ export default function Nav({ theme, onToggleTheme }) {
           ))}
         </ul>
 
+        {/* Original Theme Switcher */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           
           <button 
@@ -325,7 +326,7 @@ export default function Nav({ theme, onToggleTheme }) {
           border-radius: 30px;
           text-decoration: none;
           transition: all 0.3s ease;
-          display: inline-flex; /* Default to inline-flex so it shows in mobile menu */
+          display: inline-flex; 
           position: relative;
           overflow: hidden;
         }
@@ -424,7 +425,7 @@ export default function Nav({ theme, onToggleTheme }) {
         /* --- RESPONSIVE BREAKPOINTS --- */
         @media (max-width: 820px) {
           .nav-desktop { display: none !important; }
-          #nav-cta { display: none !important; } /* Hide CTA specifically from Top Bar on mobile */
+          #nav-cta { display: none !important; } 
           #hamburger { display: flex !important; z-index: 102; }
         }
       `}</style>
