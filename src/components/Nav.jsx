@@ -321,8 +321,8 @@ export default function Nav({ theme, onToggleTheme }) {
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 1px;
-          color: #000 !important;
-          background: var(--accent, #00e5ff);
+          color: #ffffff !important;
+          background: var(--accent);
           border-radius: 30px;
           text-decoration: none;
           transition: all 0.3s ease;
@@ -339,9 +339,9 @@ export default function Nav({ theme, onToggleTheme }) {
           position: absolute;
           top: 0; left: -100%;
           width: 50%; height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
           transform: skewX(-20deg);
-          animation: button-shine 3s infinite;
+          animation: button-shine 4s infinite;
         }
 
         @keyframes button-shine {
@@ -352,7 +352,8 @@ export default function Nav({ theme, onToggleTheme }) {
 
         .modern-cta-btn:hover {
           transform: translateY(-2px);
-          background: #fff;
+          background: var(--accent);
+          filter: brightness(1.1);
         }
         
         .nav-dark .modern-cta-btn:hover { box-shadow: 0 6px 20px rgba(0, 229, 255, 0.4); }
@@ -411,10 +412,10 @@ export default function Nav({ theme, onToggleTheme }) {
         }
         
         .menu-dark .mobile-nav-link:hover, .menu-dark .mobile-nav-link.active {
-           text-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+          text-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
         }
         .menu-light .mobile-nav-link:hover, .menu-light .mobile-nav-link.active {
-           text-shadow: none;
+          text-shadow: none;
         }
 
         @keyframes slideDown {

@@ -54,6 +54,8 @@ function ResponseBadge() {
 export default function Contact() {
   const sectRef = useScrollAnimation();
   const [form, setForm] = useState({ name: '', company: '', email: '', service: '', message: '' });
+  //button hover adding
+  const [isHovered, setIsHovered] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [focused, setFocused] = useState('');
 
@@ -180,15 +182,62 @@ export default function Contact() {
                     onFocus={() => setFocused('message')} onBlur={() => setFocused('')} />
                 </div>
 
-                {/* Word count hint */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <button type="submit" className="btn-primary" style={{ fontSize: 12 }}>
-                    Send Message →
-                  </button>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text3)' }}>
-                    {form.message.length} chars
-                  </span>
-                </div>
+                <button type="submit" className="btn-primary" onMouseEnter = {() => setIsHovered(true)}
+                  onMouseLeave ={()=> setIsHovered(false)} 
+                  style={{
+                    alignSelf:'flex-start',
+                    marginTop: 8,
+                    backgroundColor: isHovered ? 'orange' : 'orange', 
+                    border: 'none',
+                    padding: '12px 24px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease', 
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}>
+                      Send Message 
+                </button>
+
+                <style>{`
+                  .btn-primary {
+                    position: relative;
+                    overflow: hidden;
+                    background-color: orange !important;
+                    color: black;
+                    border: none;
+                    padding: 12px 28px;
+                    
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                  }
+
+                  .btn-primary:hover {
+                    background-color: orange !important;
+                    transform: translateY(-2px);
+                  }
+
+                  /* Shine effect eka */
+                  .btn-primary::before {
+                    content: '';
+                    position: absolute;
+                    top: 0; left: -100%;
+                    width: 50%; height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+                    transform: skewX(-20deg);
+                    animation: button-shine 4s infinite; /* Nav eke wagema 6s damma */
+                  }
+
+                  @keyframes button-shine {
+                    0% { left: -100%; }
+                    15% { left: 200%; }
+                    100% { left: 200%; }
+                  }
+                `}</style>
               </form>
             )}
           </div>

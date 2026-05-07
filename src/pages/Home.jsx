@@ -3,41 +3,55 @@ import { Link } from 'react-router-dom';
 import { siteData } from '../data';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
-// ── 3D STACKED BOXES DATA (PERFECT TIGHT PYRAMID) ──
-// මෙහි x, y, z අගයන් ඉතා නිවැරදිව සකසා ඇත. පෙට්ටි අතර පරතරය 4px පමණි.
+// ── GLASS COLORS (LIGHT BLUE THEME - Optimized for 3D) ──
+const glassColors = {
+  light: { 
+    front: 'rgba(230, 247, 255, 0.85)', 
+    top: 'rgba(230, 247, 255, 0.65)', 
+    side: 'rgba(230, 247, 255, 0.65)',
+    border: 'rgba(255, 255, 255, 0.8)',
+    shadow: 'inset 0 0 15px rgba(255, 255, 255, 0.6)'
+  },
+  dark: { 
+    front: 'rgba(16, 45, 65, 0.8)', 
+    top: 'rgba(16, 45, 65, 0.6)', 
+    side: 'rgba(16, 45, 65, 0.6)',
+    border: 'rgba(74, 214, 232, 0.25)',
+    shadow: 'inset 0 0 15px rgba(74, 214, 232, 0.05)'
+  }
+};
+
+// ── 3D STACKED BOXES DATA (SCATTERED & PERFORMANCE OPTIMIZED) ──
 const techStack = [
-  // Top Box (Tier 1)
   { 
     name: 'React.js', 
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg', 
-    x: 0, y: -115, z: 0, s: 1, zIndex: 10 
+    x: 5, y: -110, z: -10, s: 1, zIndex: 11, ...glassColors 
   },
-  // Middle Row (Tier 2)
   { 
     name: 'Node.js', 
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg', 
-    x: -52, y: -10, z: 0, s: 1, zIndex: 9 
+    x: -65, y: -5, z: 10, s: 1, zIndex: 14, ...glassColors 
   },
   { 
     name: 'Python', 
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg', 
-    x: 52, y: -10, z: 0, s: 1, zIndex: 9 
-  },
-  // Bottom Row (Tier 3)
-  { 
-    name: 'JavaScript', 
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg', 
-    x: -104, y: 95, z: 0, s: 1, zIndex: 8 
+    x: 85, y: -20, z: -70, s: 1, zIndex: 9, ...glassColors 
   },
   { 
-    name: 'AWS', 
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg', 
-    x: 0, y: 95, z: 0, s: 1, zIndex: 8 
+    name: 'Next.js', 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg', 
+    x: -110, y: 100, z: 0, s: 1, zIndex: 10, ...glassColors 
+  },
+  { 
+    name: 'Firebase', 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg', 
+    x: 15, y: 110, z: 15, s: 1, zIndex: 15, ...glassColors 
   },
   { 
     name: 'MySQL', 
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg', 
-    x: 104, y: 95, z: 0, s: 1, zIndex: 8 
+    x: 125, y: 85, z: -60, s: 1, zIndex: 8, ...glassColors 
   },
 ];
 
@@ -101,22 +115,26 @@ export default function Home() {
           flex-direction: column;
         }
 
-        /* ── EXACT Original Light Mode Variables ── */
+        /* ── Light Mode Variables ── */
         .light-mode {
           --page-bg: #ffffff; 
-          --hero-bento-bg: linear-gradient(135deg, #e4f1f0 0%, #d5e9e9 100%);
-          --alt-bento-bg: linear-gradient(135deg, #f0f7f7 0%, #e6f2f2 100%);
+          --hero-bento-bg: linear-gradient(180deg, #d8ebea 0%, #ffffff 100%);
+          --alt-bento-bg: linear-gradient(180deg, #ffffff 0%, #d8ebea 100%);
           
           --text-main: #1c2b33;
           --text-muted: #5e6d75;
           --accent: #15797b; 
           --accent-hover: #105a5c;
           
-          --solid-card-bg: #ffffff;
-          --card-border: rgba(21, 121, 123, 0.15);
-          --card-shadow: 0 10px 40px rgba(21, 121, 123, 0.05);
-          --card-shadow-hover: 0 20px 50px rgba(21, 121, 123, 0.12);
+          /* Cards are now more transparent so the glow shows through perfectly */
+          --card-base-bg: rgba(255, 255, 255, 0.45);
+          --card-border: rgba(21, 121, 123, 0.2);
+          --card-shadow: 0 10px 30px rgba(21, 121, 123, 0.05);
           
+          --glass-hover-bg: rgba(255, 255, 255, 0.15);
+          --glass-hover-border: rgba(255, 255, 255, 0.8);
+          --glass-inset-shadow: inset 0 0 20px rgba(255, 255, 255, 0.8), 0 20px 40px rgba(21, 121, 123, 0.12);
+
           --btn-bg: #15797b;
           --btn-bg-hover: #105a5c;
           --btn-text: #ffffff;
@@ -128,29 +146,29 @@ export default function Home() {
           --pill-text: #15797b;
           --icon-bg: rgba(21, 121, 123, 0.08);
 
-          /* 3D Box Colors - Light */
-          --cube-front: #ffffff;
-          --cube-top: #f5f5f5;
-          --cube-side: #fafafa;
           --cube-border: rgba(0, 0, 0, 0.05);
         }
 
-        /* ── EXACT Original Dark Mode Variables ── */
+        /* ── Dark Mode Variables ── */
         .dark-mode {
           --page-bg: #070b0f; 
-          --hero-bento-bg: linear-gradient(135deg, #0e171b 0%, #152229 100%);
-          --alt-bento-bg: linear-gradient(135deg, #0a1114 0%, #0d161a 100%);
+          --hero-bento-bg: linear-gradient(180deg, #122126 0%, #0a1114 100%);
+          --alt-bento-bg: linear-gradient(180deg, #0a1114 0%, #122126 100%);
           
           --text-main: #f0f4f8;
           --text-muted: #8b9eb0;
           --accent: #4ad6e8; 
           --accent-hover: #75e2f0;
           
-          --solid-card-bg: #111a20; 
-          --card-border: rgba(74, 214, 232, 0.1);
-          --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-          --card-shadow-hover: 0 20px 50px rgba(74, 214, 232, 0.15);
+          /* Cards are now more transparent so the glow shows through perfectly */
+          --card-base-bg: rgba(16, 25, 30, 0.35); 
+          --card-border: rgba(74, 214, 232, 0.15);
+          --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
           
+          --glass-hover-bg: rgba(16, 25, 30, 0.1);
+          --glass-hover-border: rgba(74, 214, 232, 0.4);
+          --glass-inset-shadow: inset 0 0 20px rgba(74, 214, 232, 0.1), 0 20px 40px rgba(0, 0, 0, 0.6);
+
           --btn-bg: #4ad6e8;
           --btn-bg-hover: #75e2f0;
           --btn-text: #050a0f;
@@ -162,30 +180,35 @@ export default function Home() {
           --pill-text: #4ad6e8;
           --icon-bg: rgba(74, 214, 232, 0.1);
 
-          /* 3D Box Colors - Dark Mode FIX */
-          --cube-front: #232d3b;  /* Beautiful Slate Grey */
-          --cube-top: #303d4f;
-          --cube-side: #161e27;
           --cube-border: rgba(255, 255, 255, 0.12);
         }
 
-        .premium-text { font-family: 'Inter', -apple-system, sans-serif; transition: color 0.5s ease; color: var(--text-muted); }
-        .serif-heading { font-family: 'Playfair Display', 'Merriweather', serif; transition: color 0.5s ease; color: var(--text-main); }
+        .premium-text { 
+          font-family: 'Inter', -apple-system, sans-serif; 
+          transition: color 0.5s ease; 
+          color: var(--text-muted); 
+        }
 
-        /* EXACT Original non-glass Bento Box */
+        .serif-heading { 
+          font-family: 'Playfair Display', 'Merriweather', serif; 
+          transition: color 0.5s ease; 
+          color: var(--text-main); 
+        }
+
+        /* ── HERO BENTO BOX & HEIGHT FIX ── */
         .hero-bento-box {
           background: var(--hero-bento-bg);
-          border-radius: 40px;
+          border-radius: 56px; 
           position: relative; 
           z-index: 2;
           overflow: hidden; 
           display: flex;
-          min-height: 580px;
+          min-height: 540px; 
         }
 
         .hero-content { 
           flex: 1; 
-          padding: 6rem 4rem; 
+          padding: 60px 48px; 
           display: flex;
           flex-direction: column;
           justify-content: center; 
@@ -198,144 +221,415 @@ export default function Home() {
         /* ────────────────────────────────────────── */
         /* ── 3D PHYSICAL PYRAMID CUBES CSS ── */
         /* ────────────────────────────────────────── */
-        .tech-stack-container {
+        .tech-stack-container { 
           flex: 1; 
-          position: relative;
-          z-index: 2;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          /* Critical for receding depth */
+          position: relative; 
+          z-index: 2; 
+          display: flex; 
+          justify-content: center; 
+          align-items: center; 
           perspective: 2000px; 
         }
 
-        .pyramid-container {
-          position: relative;
-          transform-style: preserve-3d;
-          /* Rotate to show Top and Right sides */
+        .pyramid-container { 
+          position: relative; 
+          transform-style: preserve-3d; 
           transform: rotateX(-15deg) rotateY(25deg); 
         }
 
-        .position-wrapper {
-          position: absolute;
-          width: 100px;
-          height: 100px;
-          margin-top: -50px;
-          margin-left: -50px;
-          transform-style: preserve-3d;
-          transition: transform 0.3s ease;
-          cursor: pointer;
+        .position-wrapper { 
+          position: absolute; 
+          width: 100px; 
+          height: 100px; 
+          margin-top: -50px; 
+          margin-left: -50px; 
+          transform-style: preserve-3d; 
+          transition: transform 0.3s ease; 
+          cursor: pointer; 
         }
 
-        .hover-wrapper {
-          width: 100%;
-          height: 100%;
-          transform-style: preserve-3d;
-          transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .hover-wrapper { 
+          width: 100%; 
+          height: 100%; 
+          transform-style: preserve-3d; 
+          transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
 
-        .position-wrapper:hover {
-          z-index: 999 !important;
+        .position-wrapper:hover .hover-wrapper { 
+          transform: translateZ(50px) scale(1.15); 
         }
 
-        /* On hover, pop out of the stack */
-        .position-wrapper:hover .hover-wrapper {
-          transform: translateZ(50px) scale(1.15);
+        .cube { 
+          width: 100%; 
+          height: 100%; 
+          position: absolute; 
+          transform-style: preserve-3d; 
         }
 
-        .cube {
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          transform-style: preserve-3d;
+        .cube-face { 
+          position: absolute; 
+          width: 100px; 
+          height: 100px; 
+          display: flex; 
+          justify-content: center; 
+          align-items: center; 
+          box-sizing: border-box; 
+          border-radius: 12px; 
+          border: 1px solid var(--cb); 
+          box-shadow: var(--cs-inner); 
+          transition: background 0.5s ease, border-color 0.5s ease;
         }
 
-        .cube-face {
-          position: absolute;
-          width: 100px;
-          height: 100px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          box-sizing: border-box;
-          background: #ffffff;
-          border: 1px solid var(--cube-border);
-          border-radius: 2px;
+        .cube-front { 
+          transform: rotateY(0deg) translateZ(50px); 
+          background: var(--cf); 
         }
 
-        .cube-front {
-          transform: rotateY(0deg) translateZ(50px);
-          background: var(--cube-front);
-          box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+        .dark-mode .cube-front img { 
+          filter: drop-shadow(0px 0px 8px rgba(255,255,255,0.4)); 
         }
 
-        .dark-mode .cube-front {
-          box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-        }
-        
-        /* Soft white glow so dark logos (AWS, JS) are visible in Dark Mode */
-        .dark-mode .cube-front img {
-          filter: drop-shadow(0px 0px 5px rgba(255,255,255,0.3));
+        .cube-front img { 
+          max-width: 60%; 
+          max-height: 60%; 
+          object-fit: contain; 
         }
 
-        .cube-front img {
-          max-width: 60%;
-          max-height: 60%;
-          object-fit: contain;
+        .cube-top { 
+          transform: rotateX(90deg) translateZ(50px); 
+          background: var(--ct); 
         }
 
-        .cube-top { transform: rotateX(90deg) translateZ(50px); background: var(--cube-top); }
-        .cube-right { transform: rotateY(90deg) translateZ(50px); background: var(--cube-side); }
-        .cube-left { transform: rotateY(-90deg) translateZ(50px); background: var(--cube-side); }
-        .cube-back { transform: rotateY(180deg) translateZ(50px); background: var(--cube-front); }
-        
+        .cube-right { 
+          transform: rotateY(90deg) translateZ(50px); 
+          background: var(--cs); 
+        }
+
+        .cube-left { 
+          transform: rotateY(-90deg) translateZ(50px); 
+          background: var(--cs); 
+        }
+
+        .cube-back { 
+          transform: rotateY(180deg) translateZ(50px); 
+          background: var(--cf); 
+        }
+
         .cube-bottom { 
           transform: rotateX(-90deg) translateZ(50px); 
-          background: var(--cube-top); 
-          box-shadow: 0 20px 30px rgba(0,0,0,0.15); 
+          background: var(--ct); 
+          box-shadow: 0 30px 40px rgba(0,0,0,0.1); 
         }
-        .dark-mode .cube-bottom { box-shadow: 0 20px 30px rgba(0,0,0,0.6); }
+
+        .dark-mode .cube-bottom { 
+          box-shadow: 0 30px 40px rgba(0,0,0,0.5); 
+        }
 
         /* ── Floating Abstract Shapes ── */
-        .floating-shape-1 { position: absolute; width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--accent); opacity: 0.3; top: 15%; left: 10%; animation: float 6s ease-in-out infinite; }
-        .floating-shape-2 { position: absolute; width: 55px; height: 55px; border-radius: 50%; background: var(--accent); opacity: 0.15; bottom: 12%; left: 28%; animation: float 8s ease-in-out infinite reverse; }
+        .floating-shape-1 { 
+          position: absolute; 
+          width: 45px; 
+          height: 45px; 
+          border-radius: 50%; 
+          border: 2px solid var(--accent); 
+          opacity: 0.3; 
+          top: 15%; 
+          left: 10%; 
+          animation: float 6s ease-in-out infinite; 
+        }
 
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes revealUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
+        .floating-shape-2 { 
+          position: absolute; 
+          width: 55px; 
+          height: 55px; 
+          border-radius: 50%; 
+          background: var(--accent); 
+          opacity: 0.15; 
+          bottom: 12%; 
+          left: 28%; 
+          animation: float 8s ease-in-out infinite reverse; 
+        }
 
-        /* ── Buttons ── */
-        .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
-        .btn-new-primary { padding: 12px 32px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; transition: all 0.3s ease; background-color: var(--btn-bg); color: var(--btn-text); border: 2px solid var(--btn-bg); }
-        .btn-new-primary:hover { background-color: var(--btn-bg-hover); border-color: var(--btn-bg-hover); transform: translateY(-2px); }
-        .btn-new-outline { padding: 12px 32px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; transition: all 0.3s ease; background-color: var(--btn-outline-bg); color: var(--accent); border: 2px solid var(--btn-outline-border); }
-        .btn-new-outline:hover { background-color: var(--btn-outline-hover); transform: translateY(-2px); }
+        @keyframes float { 
+          0%, 100% { transform: translateY(0); } 
+          50% { transform: translateY(-10px); } 
+        }
 
-        /* ── EXACT ORIGINAL SECTIONS ── */
-        .plain-section { padding: 4rem 2rem; background: transparent; }
-        .stat-item { text-align: center; padding: 1rem; }
-        .stat-num { font-size: 3.5rem; font-weight: 800; color: var(--accent); line-height: 1.1; margin-bottom: 0.5rem; }
+        @keyframes revealUp { 
+          0% { opacity: 0; transform: translateY(30px); } 
+          100% { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* ────────────────────────────────────────── */
+        /* ── SUPERB PREMIUM BUTTONS ── */
+        /* ────────────────────────────────────────── */
+        .btn-group { 
+          display: flex; 
+          gap: 1rem; 
+          flex-wrap: wrap; 
+          margin-top: 1rem; 
+        }
         
-        .clean-card { background: transparent; border: 1px solid var(--card-border); border-radius: 24px; padding: 2.5rem; transition: all 0.4s ease; display: flex; flex-direction: column; align-items: flex-start; }
-        .clean-card:hover { background: var(--solid-card-bg); border-color: transparent; box-shadow: var(--card-shadow-hover); transform: translateY(-6px); }
-        .service-icon-box { width: 55px; height: 55px; color: var(--accent); margin-bottom: 1.5rem; background: var(--icon-bg); border-radius: 16px; display: flex; align-items: center; justify-content: center; padding: 12px; }
+        .btn-new-primary { 
+          position: relative;
+          padding: 16px 36px; 
+          border-radius: 16px; 
+          font-weight: 700; 
+          font-size: 0.85rem; 
+          text-transform: uppercase; 
+          letter-spacing: 2px; 
+          text-decoration: none; 
+          color: #ffffff !important;
+          background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+          background-size: 200% 200%;
+          border: none;
+          z-index: 1;
+          transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          box-shadow: 0 8px 20px var(--accent-dim);
+          overflow: hidden;
+        }
+
+        .btn-new-primary::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 16px; 
+          box-shadow: inset 0 0 20px rgba(255,255,255,0.3);
+          opacity: 0;
+          transition: opacity 0.4s ease;
+          z-index: 2;
+        }
+
+        .btn-new-primary::before {
+          content: '';
+          position: absolute;
+          top: 0; left: -100%;
+          width: 60%; height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+          transform: skewX(-25deg);
+          transition: left 0.7s ease;
+          z-index: 3;
+        }
+
+        .btn-new-primary:hover { 
+          transform: translateY(-6px) scale(1.03); 
+          box-shadow: 0 20px 40px var(--accent-dim), 0 0 20px var(--accent-hover);
+          background-position: 100% 100%;
+        }
+
+        .btn-new-primary:hover::after { 
+          opacity: 1; 
+        }
+
+        .btn-new-primary:hover::before { 
+          left: 200%; 
+        }
+
+        .btn-new-outline { 
+          position: relative;
+          padding: 16px 36px; 
+          border-radius: 16px; 
+          font-weight: 700; 
+          font-size: 0.85rem; 
+          text-transform: uppercase; 
+          letter-spacing: 2px; 
+          text-decoration: none; 
+          color: var(--text-main); 
+          background: var(--card-base-bg);
+          border: 1px solid var(--accent); 
+          z-index: 1;
+          transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          overflow: hidden;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+        }
+
+        .btn-new-outline::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          background: var(--accent);
+          transform: scaleX(0);
+          transform-origin: right;
+          transition: transform 0.5s cubic-bezier(0.86, 0, 0.07, 1);
+          z-index: -1;
+        }
+
+        .btn-new-outline:hover { 
+          color: #ffffff !important;
+          border-color: transparent;
+          transform: translateY(-6px) scale(1.03);
+          box-shadow: 0 15px 35px var(--accent-dim);
+        }
+
+        .btn-new-outline:hover::before { 
+          transform: scaleX(1); 
+          transform-origin: left; 
+        }
+
+        /* ── SECTIONS ── */
+        .plain-section { 
+          padding: 4rem 2rem; 
+          background: transparent; 
+        }
+
+        .stat-item { 
+          text-align: center; 
+          padding: 1rem; 
+        }
+
+        .stat-num { 
+          font-size: 3.5rem; 
+          font-weight: 800; 
+          color: var(--accent); 
+          line-height: 1.1; 
+          margin-bottom: 0.5rem; 
+        }
         
-        /* EXACT Original Alt Bento Section */
-        .alt-bento-section { background: var(--alt-bento-bg); border-radius: 72px; padding: 48px; margin: 2rem 0; }
+        /* ────────────────────────────────────────── */
+        /* ── CARDS (ELEVATED + CORNER GLOW) ── */
+        /* ────────────────────────────────────────── */
+        .clean-card, .solid-card { 
+          background: var(--card-base-bg); 
+          border: 1px solid var(--card-border); 
+          border-radius: 16px; 
+          padding: 2.5rem; 
+          box-shadow: var(--card-shadow);
+          transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+          display: flex; 
+          flex-direction: column; 
+          position: relative;
+          overflow: hidden;
+          /* Base glass effect so the glow shows through nicely */
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+        }
         
-        /* EXACT Original Solid Card */
-        .solid-card { background: var(--solid-card-bg); border-radius: 24px; padding: 2.5rem; border: none; box-shadow: var(--card-shadow); transition: all 0.4s ease; display: flex; flex-direction: column; height: 100%; }
-        .solid-card:hover { transform: translateY(-8px); box-shadow: var(--card-shadow-hover); }
-        .glass-pill { padding: 8px 20px; border-radius: 100px; background: var(--pill-bg); color: var(--pill-text); font-size: 0.8rem; font-weight: 700; transition: all 0.5s ease; z-index: 10;}
+        .clean-card { 
+          align-items: flex-start; 
+        }
+
+        .solid-card { 
+          height: 100%; 
+        }
+
+        /* 2. The Glowing Corner Effect (Top-Right) */
+        .clean-card::after, .solid-card::after {
+          content: '';
+          position: absolute;
+          top: -40px;
+          right: -40px;
+          width: 160px;
+          height: 160px;
+          background: var(--accent);
+          filter: blur(50px);
+          /* Now clearly visible even without hovering */
+          opacity: 0.35; 
+          border-radius: 50%;
+          z-index: 0;
+          transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          pointer-events: none;
+        }
+
+        .clean-card::before, .solid-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: -150%;
+          width: 60%; height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+          transform: skewX(-20deg);
+          transition: left 0.6s ease;
+          z-index: 0;
+          pointer-events: none;
+        }
+
+        .dark-mode .clean-card::before, .dark-mode .solid-card::before {
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+        }
+
+        .clean-card > *, .solid-card > * { 
+          position: relative; 
+          z-index: 1; 
+        }
+
+        /* 3. Glass Hover Effect */
+        .clean-card:hover, .solid-card:hover { 
+          background: var(--glass-hover-bg); 
+          border-color: var(--glass-hover-border); 
+          box-shadow: var(--glass-inset-shadow); 
+          transform: translateY(-8px); 
+          /* Stronger blur on hover */
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+        }
+
+        /* The glowing corner pops beautifully under the frosted glass */
+        .clean-card:hover::after, .solid-card:hover::after {
+          opacity: 0.6; /* Brighter glow */
+          transform: scale(1.6); /* Glow spreads out more */
+        }
+
+        .clean-card:hover::before, .solid-card:hover::before { 
+          left: 200%; 
+        }
+
+        .service-icon-box { 
+          width: 55px; 
+          height: 55px; 
+          color: var(--accent); 
+          margin-bottom: 1.5rem; 
+          background: var(--icon-bg); 
+          border-radius: 16px; 
+          display: flex; 
+          align-items: center; 
+          justify-content: center; 
+          padding: 12px; 
+        }
+        
+        /* ── SELECTED WORK SECTION ── */
+        .alt-bento-section { 
+          background: var(--alt-bento-bg); 
+          border-radius: 56px; 
+          padding: 40px; 
+          margin: 2rem 0; 
+        }
+        
+        .glass-pill { 
+          padding: 8px 20px; 
+          border-radius: 100px; 
+          background: var(--pill-bg); 
+          color: var(--pill-text); 
+          font-size: 0.8rem; 
+          font-weight: 700; 
+          transition: all 0.5s ease; 
+          z-index: 10;
+        }
 
         @media (max-width: 900px) {
-          .home-wrapper { padding: 90px 16px 24px 16px; }
-          .hero-bento-box { flex-direction: column; }
-          .hero-content { padding: 3rem 2rem 1rem 2rem; text-align: center; align-items: center; }
-          
-          .pyramid-container { transform: rotateX(-15deg) rotateY(25deg) scale(0.8); }
-          .tech-stack-container { min-height: 400px; }
-          
-          .alt-bento-section { padding: 32px; border-radius: 56px; }
+          .home-wrapper { 
+            padding: 90px 16px 24px 16px; 
+          }
+          .hero-bento-box { 
+            flex-direction: column; 
+            border-radius: 48px; 
+            min-height: auto; 
+          }
+          .hero-content { 
+            padding: 40px 24px; 
+            text-align: center; 
+            align-items: center; 
+          }
+          .pyramid-container { 
+            transform: rotateX(-15deg) rotateY(25deg) scale(0.8); 
+          }
+          .tech-stack-container { 
+            min-height: 400px; 
+          }
+          .alt-bento-section { 
+            padding: 24px; 
+            border-radius: 40px; 
+          } 
         }
       `}</style>
 
@@ -348,13 +642,13 @@ export default function Home() {
 
           <div className="hero-content">
             <h1 className="serif-heading" style={{ fontSize: 'clamp(3.2rem, 5vw, 4.5rem)', fontWeight: 800, lineHeight: 1.1, marginBottom: '10px', letterSpacing: '-1px' }}>
-              Hello, I'm <span style={{ color: 'var(--accent)' }}>Tharindu</span>
+              Build Your <span style={{ color: 'var(--accent)' }}>Digital</span> Future
             </h1>
             <h2 className="serif-heading" style={{ fontSize: 'clamp(2.4rem, 4vw, 3.2rem)', fontWeight: 700, color: 'var(--accent)', marginBottom: '1.5rem', letterSpacing: '-1px' }}>
-              Web Developer
+              Expert Development Agency
             </h2>
             <p className="premium-text" style={{ fontSize: '1.1rem', lineHeight: 1.7, marginBottom: '2.5rem', maxWidth: '480px' }}>
-              I am a Full-Stack Web Developer with extensive experience of over 4 years. My expertise is in creating & designing websites, Mobile Apps, and Desktop Applications.
+              We are a team of passionate developers crafting scalable, high-performance web and mobile solutions for businesses worldwide.
             </p>
             
             <div className="btn-group">
@@ -363,7 +657,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* ─── PHYSICAL 3D CUBES (PYRAMID STACK) ─── */}
+          {/* ─── PHYSICAL 3D CUBES (GLASS EFFECT) ─── */}
           <div className="tech-stack-container">
             <div className="pyramid-container">
               {techStack.map((tech) => (
@@ -377,7 +671,13 @@ export default function Home() {
                   }}
                 >
                   <div className="hover-wrapper">
-                    <div className="cube">
+                    <div className="cube" style={{
+                      '--cf': isDark ? tech.dark.front : tech.light.front,
+                      '--ct': isDark ? tech.dark.top : tech.light.top,
+                      '--cs': isDark ? tech.dark.side : tech.light.side,
+                      '--cb': isDark ? tech.dark.border : tech.light.border,
+                      '--cs-inner': isDark ? tech.dark.shadow : tech.light.shadow,
+                    }}>
                       {/* Front Face with Logo */}
                       <div className="cube-face cube-front">
                         <img src={tech.icon} alt={tech.name} className="tech-icon-img" />

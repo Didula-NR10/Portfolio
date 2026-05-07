@@ -77,7 +77,7 @@ body {
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 99px; }
 
-/* ───────────────────────── PREMIUM AURORA & ADVANCED MESH ───────────────────────── */
+/* ───────────────────────── PREMIUM AURORA ───────────────────────── */
 
 /* 1. Floating Ambient Glow (Aurora Effect) */
 body::before {
@@ -96,39 +96,11 @@ body::before {
   transition: background var(--transition);
 }
 
-/* 2. Advanced Tech Mesh (Interlocking Carbon Waves replacing the old dots) */
-body::after {
-  content: '';
-  position: fixed;
-  /* Extending slightly beyond the screen to hide animation edges */
-  inset: -10%; 
-  width: 120%;
-  height: 120%;
-  /* Complex interlocking wave pattern using overlapping radial gradients */
-  background-image:
-    radial-gradient(circle at 100% 50%, transparent 20%, var(--accent-dim) 21%, var(--accent-dim) 34%, transparent 35%, transparent),
-    radial-gradient(circle at 0% 50%, transparent 20%, var(--accent-dim) 21%, var(--accent-dim) 34%, transparent 35%, transparent);
-  background-size: 60px 60px;
-  background-position: 0 0, 30px 30px;
-  opacity: 0.6;
-  pointer-events: none;
-  z-index: 0;
-  /* Mask to create a smooth fade-out effect towards the edges */
-  -webkit-mask-image: radial-gradient(ellipse at center, black 10%, transparent 70%);
-  mask-image: radial-gradient(ellipse at center, black 10%, transparent 70%);
-  animation: wavePulse 15s ease-in-out infinite alternate;
-}
-
 /* ── Backdrop Animations ── */
 @keyframes auroraRotate {
   0% { transform: rotate(0deg) scale(1); }
   50% { transform: rotate(180deg) scale(1.1); }
   100% { transform: rotate(360deg) scale(1); }
-}
-
-@keyframes wavePulse {
-  0% { opacity: 0.3; transform: scale(1) translate(0, 0); }
-  100% { opacity: 0.8; transform: scale(1.05) translate(-10px, -10px); }
 }
 
 /* ───────────────────────── CUSTOM CURSOR ───────────────────────── */
