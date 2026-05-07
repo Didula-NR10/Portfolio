@@ -44,8 +44,8 @@ const techStack = [
     x: -110, y: 100, z: 0, s: 1, zIndex: 10, ...glassColors 
   },
   { 
-    name: 'Firebase', 
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg', 
+    name: 'Flutter', 
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg', 
     x: 15, y: 110, z: 15, s: 1, zIndex: 15, ...glassColors 
   },
   { 
