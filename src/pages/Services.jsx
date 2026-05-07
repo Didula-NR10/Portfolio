@@ -1,8 +1,9 @@
+import { Link } from 'react-router-dom'; // 👈 Meka add kara
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { siteData } from '../data';
 
 const icons = {
-  web:    <svg viewBox="0 0 24 24" style={{width:24,height:24,stroke:'var(--accent)',fill:'none',strokeWidth:1.5,strokeLinecap:'round',strokeLinejoin:'round'}}><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>,
+  web:     <svg viewBox="0 0 24 24" style={{width:24,height:24,stroke:'var(--accent)',fill:'none',strokeWidth:1.5,strokeLinecap:'round',strokeLinejoin:'round'}}><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>,
   mobile: <svg viewBox="0 0 24 24" style={{width:24,height:24,stroke:'var(--accent)',fill:'none',strokeWidth:1.5,strokeLinecap:'round',strokeLinejoin:'round'}}><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>,
   cloud:  <svg viewBox="0 0 24 24" style={{width:24,height:24,stroke:'var(--accent)',fill:'none',strokeWidth:1.5,strokeLinecap:'round',strokeLinejoin:'round'}}><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>,
   ai:     <svg viewBox="0 0 24 24" style={{width:24,height:24,stroke:'var(--accent)',fill:'none',strokeWidth:1.5,strokeLinecap:'round',strokeLinejoin:'round'}}><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>,
@@ -124,6 +125,33 @@ export default function Services() {
               </div>
             ))}
           </div>
+
+          {/* ── GET A QUOTE BUTTON ── */}
+          <div className="reveal" style={{ 
+            marginTop: 80, 
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}>
+            <p style={{ 
+              fontFamily: 'var(--font-body)', 
+              color: 'var(--text2)', 
+              fontSize: 16,
+              marginBottom: 24
+            }}>
+              Ready to bring your project to life?
+            </p>
+            <Link to="/contact" className="modern-cta-btn" style={{ 
+              padding: '14px 40px', 
+              fontSize: 15,
+              background: 'orange',
+              textDecoration: 'none'
+            }}>
+              Get a Quote 
+            </Link>
+          </div>
+
         </div>
       </section>
 

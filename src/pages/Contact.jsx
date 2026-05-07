@@ -65,6 +65,8 @@ function TerminalBlock() {
 export default function Contact() {
   const sectRef = useScrollAnimation();
   const [form, setForm] = useState({ name: '', company: '', email: '', service: '', message: '' });
+  //button hover adding
+  const [isHovered, setIsHovered] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -175,9 +177,62 @@ export default function Contact() {
                     className="form-textarea" placeholder="Tell us about your project, timeline, and budget..." required />
                 </div>
 
-                <button type="submit" className="btn-primary" style={{ alignSelf: 'flex-start', marginTop: 8 }}>
-                  Send Message →
+                <button type="submit" className="btn-primary" onMouseEnter = {() => setIsHovered(true)}
+                  onMouseLeave ={()=> setIsHovered(false)} 
+                  style={{
+                    alignSelf:'flex-start',
+                    marginTop: 8,
+                    backgroundColor: isHovered ? 'orange' : 'orange', 
+                    border: 'none',
+                    padding: '12px 24px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease', 
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}>
+                      Send Message 
                 </button>
+
+                <style>{`
+                  .btn-primary {
+                    position: relative;
+                    overflow: hidden;
+                    background-color: orange !important;
+                    color: black;
+                    border: none;
+                    padding: 12px 28px;
+                    
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                  }
+
+                  .btn-primary:hover {
+                    background-color: orange !important;
+                    transform: translateY(-2px);
+                  }
+
+                  /* Shine effect eka */
+                  .btn-primary::before {
+                    content: '';
+                    position: absolute;
+                    top: 0; left: -100%;
+                    width: 50%; height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+                    transform: skewX(-20deg);
+                    animation: button-shine 4s infinite; /* Nav eke wagema 6s damma */
+                  }
+
+                  @keyframes button-shine {
+                    0% { left: -100%; }
+                    15% { left: 200%; }
+                    100% { left: 200%; }
+                  }
+                `}</style>
               </form>
             )}
           </div>
