@@ -36,7 +36,7 @@
 [data-theme="light"] {
   /* Darkened the main background slightly to make the blue stand out */
   --bg:         #e2e8f0; 
-  --bg2:        #F8FAFC;
+  --bg2:         linear-gradient(90deg, #FFF9E5 0%, #FDF5E6 25%, #E8F5E9 50%, #E3F2FD 75%, #F5E6E8 100%);;
   --bg3:        rgb(186, 204, 225);
   --surface:    #FFFFFF;
   --surface2:   #F2F6FB;

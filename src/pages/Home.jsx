@@ -123,8 +123,8 @@ export default function Home() {
           
           --text-main: #1c2b33;
           --text-muted: #5e6d75;
-          --accent: #15797b; 
-          --accent-hover: #105a5c;
+          --accent: #00C8FF; 
+          --accent-hover: #00C8FF;
           
           /* Cards are now more transparent so the glow shows through perfectly */
           --card-base-bg: rgba(255, 255, 255, 0.45);
